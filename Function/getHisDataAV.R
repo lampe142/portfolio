@@ -1,0 +1,279 @@
+getAllCurrentAV <- function(pauseTime=20){
+  dp$position[,"curr.1D.logReturn"] <- NA
+  repeat{
+    missingAss <-  dp$position$AlphaVantage[is.na(dp$position[,"curr.1D.logReturn"])]
+    print(paste('Assets missing:',missingAss))
+    
+    cat(crayon::red(paste('Number of Assets missing:',length(missingAss))))
+    cat(crayon::red(paste(' representing :',round(length(missingAss) / 
+                                                    length(dp$position$AlphaVantage),2) *100 ,'%')))
+    for(iAss in missingAss){
+      tryCatch({
+        iAssCurr <- getCurrentAV(iAss,verbose = T)
+        dp$position[iAss,"curr.1D.logReturn"] <<- log(iAssCurr$close / tail(dp$FX$USEURO,1) / as.numeric(dp$position[iAss,"ClosePrice"]))
+        # dp$dp$position[iAss,"curr.Date"] <- iAssCurr$date[[1]]
+      }, error = function(e){
+        Sys.sleep(pauseTime)
+        dp$position[iAss,"curr.1D.logReturn"] <<- NA
+      })
+    }
+    if(rlang::is_empty(missingAss)) break()
+  }
+  return()
+}
+
+
+getCurrentAV <- function(symbolI='GWPH', verbose=F, os='compact'){
+  url2 <- paste('https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&interval=5min&symbol=',symbolI,
+                '&datatype=csv&apikey=QYRKHZUIGJT4NB0A&outputsize=',os,sep = '')
+  
+  x <- unlist(strsplit(rawToChar(httr::GET(url2)$content), ","))
+  date <- strsplit(x[6][1], split='\n')[[1]][2]
+  close <- as.numeric(x[10])
+  if(verbose) print(paste(symbolI,' date: ',date,' price:', close))
+  return(list(date=date, close=close))
+}
+
+addTodp <- function(downAssets, pauseTime=20){
+  dp1 <- list()
+  dp2 <- list()
+  dp1$avAdjClose <- getPortData(pauseTime=20, itCycle=10, test=F, 
+                                downAssets = downAssets)
+  
+  # download 2. try
+  repeat{
+    missingAss = downAssets[downAssets
+      %!in% attributes(dp1$avAdjClose)$names]
+    print(paste('Assets missing:',missingAss))
+    
+    cat(crayon::red(paste('Number of Assets missing:',length(missingAss))))
+    cat(crayon::red(paste(' representing :',round(length(missingAss) / 
+                                                    length(dp$position$AlphaVantage),2) *100 ,'%')))
+    
+    dp2$avAdjClose <- getPortData(pauseTime=25, itCycle=10, test=F, downAssets = missingAss)
+    # merging both downloads
+    dp1$avAdjClose <- append(dp1$avAdjClose, dp2$avAdjClose)
+    if(rlang::is_empty(missingAss)) break()
+  }
+  dp$avAdjClose <<- append(dp$avAdjClose, dp1$avAdjClose)
+  return()
+}
+
+
+
+getAllData <- function(pauseTime=20){
+#  dp$FX <- getFX(source = 'ECB'); tail(dp$FX)
+  dp$FX <<- getFX(source = 'ECB')
+  dp1 <- list()
+  dp2 <- list()
+  dp1$avAdjClose <- getPortData(pauseTime=20, itCycle=10, test=F, 
+    downAssets =dp$position$AlphaVantage[-length(dp$position$AlphaVantage)])
+  
+  # download 2. try
+  repeat{
+    missingAss = dp$position$AlphaVantage[
+      dp$position$AlphaVantage[-length(dp$position$AlphaVantage)]
+      %!in% attributes(dp1$avAdjClose)$names]
+    print(paste('Assets missing:',missingAss))
+    
+    cat(crayon::red(paste('Number of Assets missing:',length(missingAss))))
+    cat(crayon::red(paste(' representing :',round(length(missingAss) / 
+      length(dp$position$AlphaVantage),2) *100 ,'%')))
+    
+    dp2$avAdjClose <- getPortData(pauseTime=25, itCycle=10, test=F, downAssets = missingAss)
+    # merging both downloads
+    dp1$avAdjClose <- append(dp1$avAdjClose, dp2$avAdjClose)
+    if(rlang::is_empty(missingAss)) break()
+  }
+  dp$vola <<- getVola()
+  dp$avAdjClose <<- dp1$avAdjClose
+  return()
+}
+
+getHisDataAV <- function(symbolI='GWPH', verbose=F, os='compact'){
+  url2 <- paste('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=',symbolI,
+                '&apikey=QYRKHZUIGJT4NB0A&outputsize=',os,sep = '')
+  x <- unlist(strsplit(rawToChar(httr::GET(url2)$content), ","))
+  x3 <-  gsub(pattern = "\n", "",gsub(pattern = "\"", "",x[6:length(x)]))
+  x4 <- reshape2::colsplit(string=x3, pattern =":", names=c("trt", "time"))
+  
+  dates <- as.Date(gsub(" ","", x4[seq(from=9, to=nrow(x4), by=8),1]))
+  dates <- c(dates[1]+1, dates)
+  closeAdj <- as.numeric(as.character(x4[seq(from=5, to=nrow(x4), by=8),2]))
+  ts <- xts::xts(x=closeAdj, order.by = dates)
+  
+  if(verbose){ head(ts) }
+  return(ts)
+}
+
+getPortData <- function(pauseTime=15, itCycle=10, test=F, downAssets=NULL, verbose=F){
+  assetsID <- dp$position
+  avAdjClose <- list()
+  
+  os ='full'
+  i=0
+  dErr <- c()
+# loop over all the positions to download the data
+for (iAss in na.omit(downAssets)){
+  i <- (i+1)
+  if(verbose){
+    print(paste(round(i/length(na.omit(downAssets)) *100,1),'% downloaded'))
+    print(paste('AV Download asset: ',iAss,sep=''))
+  }
+
+# try download
+  tryCatch({
+    evalString <- paste0('avAdjClose$',iAss,' <- getHisDataAV(iAss, os=os)')
+    eval(parse(text = evalString))
+  }, error = function(e){
+    
+    if(verbose){
+      print(paste0('Download ',iAss,' resulted in an Error'))
+      print(paste('pause for',pauseTime,'sec. because error'))
+    }
+
+    Sys.sleep(pauseTime)
+    # second donwload
+    tryCatch({
+      evalString <- paste0('avAdjClose$',iAss,' <- getHisDataAV(iAss, os=os)')
+      eval(parse(text = evalString))
+      if(verbose) print(paste0('2. Download ',iAss,' resulted in an success'))
+    }, error = function(e){
+      if(verbose) print(paste0('2. Download ',iAss,' resulted in an Error'))
+    })
+  })
+  if(iAss=='ORHOF'){
+    # try download
+    iAss2 <- 'CNNRF'
+    avAdjClose2 <- list()
+    tryCatch({
+      evalString <- paste0('avAdjClose2$',iAss2,' <- getHisDataAV(iAss2, os=os)')
+      eval(parse(text = evalString))
+    }, error = function(e){
+      
+      if(verbose){
+        print(paste0('Download ',iAss2,' resulted in an Error'))
+        print(paste('pause for',pauseTime,'sec. because error'))
+      }
+      
+      Sys.sleep(pauseTime)
+      # second donwload
+      tryCatch({
+        evalString <- paste0('avAdjClose2$',iAss2,' <- getHisDataAV(iAss2, os=os)')
+        eval(parse(text = evalString))
+        if(verbose) print(paste0('2. Download ',iAss2,' resulted in an success'))
+      }, error = function(e){
+        if(verbose) print(paste0('2. Download ',iAss2,' resulted in an Error'))
+      })
+    })
+    avAdjClose$ORHOF <- rbind(avAdjClose$ORHOF, avAdjClose2$CNNRF)
+  }
+}
+ return(avAdjClose)
+}
+
+
+
+
+
+################################################################################
+# export
+updatePositionRisk <- function(){
+  for(iAss in names(dp$avAdjClose)){
+    iAssPos <- which(dp$position$AlphaVantage == iAss)
+    avAdjCloseEA <- eval(parse(text= paste("dp$avAdjClose$",iAss, sep=''))) / dp$FX$USEURO
+    dp$position$CloseDate[iAssPos] <<- time(tail(avAdjCloseEA))
+    dp$risk$CloseDate[iAssPos] <<- time(tail(avAdjCloseEA))
+    dp$position$ClosePrice[iAssPos] <<- tail(avAdjCloseEA, n=1)
+    avAdjlogRetEA <<- diff(log(avAdjCloseEA), lag=1)[-1]
+    lDate <<- index(tail(avAdjlogRetEA, n=1))
+    dp$position$'1D.logReturn'[iAssPos] <<- avAdjlogRetEA[lDate]
+    dp$position$'5D.logReturn'[iAssPos] <<- sum(avAdjlogRetEA[paste((lDate-5),lDate,sep='/')], na.rm=T)
+    dp$position$'23D.logReturn'[iAssPos] <<- sum(avAdjlogRetEA[paste((lDate-30),lDate,sep='/')], na.rm=T)
+    dp$position$'125D.logReturn'[iAssPos] <<- sum(avAdjlogRetEA[paste((lDate-182),lDate,sep='/')], na.rm=T)
+    dp$position$'250D.logReturn'[iAssPos] <<- sum(avAdjlogRetEA[paste((lDate-365),lDate,sep='/')], na.rm=T)
+    dp$position$'CloseDate'[iAssPos] <<- unlist(strsplit(as.character(end(avAdjlogRetEA))," "))
+  }
+  dp$position$Value <<- dp$position$Volume * dp$position$ClosePrice
+  dp$risk$Value <<- dp$position$Value
+  dp$position$'1D.return' <<- dp$position$'1D.logReturn' * dp$position$Value
+  dp$position$SharePortfolio <<- dp$position$Value / sum(dp$position$Value, na.rm =T)
+  dp$risk$SharePortfolio <<- dp$position$SharePortfolio
+  
+  posPort <- which(dp$position$Name=="Portfolio:")
+  dp$position$Value[posPort] <<- sum(dp$position$Value[1:(posPort-1)], na.rm = T)
+  dp$risk$Value[posPort] <<- sum(dp$position$Value[1:(posPort-1)], na.rm = T)
+  dp$position$CloseDate[posPort] <<- max(dp$position$CloseDate[-posPort])
+  dp$risk$CloseDate <<- dp$position$CloseDate
+  
+  dp$position$'1D.logReturn'[posPort] <<- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'1D.logReturn'[!is.na(dp$position$SharePortfolio)])
+  dp$position$'5D.logReturn'[posPort] <<- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'5D.logReturn'[!is.na(dp$position$SharePortfolio)])
+  dp$position$'23D.logReturn'[posPort] <<- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'23D.logReturn'[!is.na(dp$position$SharePortfolio)])
+  dp$position$'125D.logReturn'[posPort] <<- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'125D.logReturn'[!is.na(dp$position$SharePortfolio)])
+  dp$position$'250D.logReturn'[posPort] <<- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'250D.logReturn'[!is.na(dp$position$SharePortfolio)])
+  dp$position$Category[posPort] <<-'Portfolio:'
+  
+  return()
+}
+
+################################################################################
+# merges log Returns with sufficient data
+# fx = FX$USEURO
+# avAdjClose = dp$avAdjClose
+mergeCloseRet <- function(fx = dp$FX$USEURO, avAdjClose=dp$avAdjClose, 
+  thres=list(dataMinLength=250, nLastDays=5, nLastDaysWind=10)){
+  if(is.null(thres))thres <- list(dataMinLength=400, nLastDays=5, nLastDaysWind=10)
+  #check that of the last days is available
+  sel <- logical(length(attributes(avAdjClose)$names))
+  # check sufficient data is available
+  for (iAss in 1:length(attributes(avAdjClose)$names)){
+    sel[iAss] <- length(avAdjClose[[iAss]]) > thres$dataMinLength &
+                 time(tail(avAdjClose[[iAss]],1)) > Sys.Date()-thres$nLastDays
+  }
+  samAss <- attributes(avAdjClose)$names
+  avAdjCloseMer <- avAdjClose[[attributes(avAdjClose)$names[1]]]
+  # merging close Prices
+  for (iAss in attributes(avAdjClose)$names[sel]){
+    avAdjCloseMer <- xts::merge.xts(avAdjCloseMer, avAdjClose[[iAss]], join='inner')
+  }
+  avAdjCloseMer <- avAdjCloseMer[,-1]
+  colnames(avAdjCloseMer) <- attributes(avAdjClose)$names[sel]
+  # adjusting for FX
+  avAdjCloseMerFX = lapply(avAdjCloseMer, FUN = function(x) x/fx) 
+  avAdjCloseMerFX <- do.call(cbind, avAdjCloseMerFX)
+  colnames(avAdjCloseMerFX) <-  colnames(avAdjCloseMer)
+  # computing log returns
+  logReMer <- diff(log(avAdjCloseMerFX), lag=1)[-1]
+  reMer <- diff(avAdjCloseMerFX, lag=1)[-1]
+  # saving in the main list
+  dm$adjClose <<- avAdjCloseMerFX
+  dm$ret <<- reMer
+  dm$logRet <<- logReMer
+  dm$assTicker <<- colnames(logReMer)
+  dm$assDate <<- zoo::index(logReMer)
+  return()
+}
+
+################################################################################
+# get volatility info
+getVola <- function(verbose=F){
+  
+  volaTicker <- c('VIX','RVX')
+  dp1 <- list()
+  dp2 <- list()
+  repeat{
+    missingTicker <- volaTicker[volaTicker %!in% attributes(dp1)$names]
+    print(paste('Assets missing:',missingTicker))
+    
+    if(verbose){
+      cat(crayon::red(paste('Number of Assets missing:',length(missingTicker))))
+      cat(crayon::red(paste(' representing :',round(length(missingTicker) / 
+                                                      length(volaTicker),2) *100 ,'%')))
+    }
+    dp2 <- getPortData(pauseTime=25, itCycle=10, test=F, downAssets = missingTicker,verbose = T)
+    # merging both downloads
+    dp1 <- append(dp1, dp2)
+    if(rlang::is_empty(missingTicker)) break()
+  }
+  return(dp1)
+}

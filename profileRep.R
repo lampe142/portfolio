@@ -1,0 +1,26 @@
+here::here()
+require(ggplot2)
+require(zoo)
+require(openxlsx)
+require(bootstrap)
+require(MSGARCH)
+require(gtrendsR)
+require(formattable)
+require(DT)
+require(kableExtra)
+require(scales)
+require(zoo)
+require(xts)
+require(dplyr)
+require(formattable)
+require(dygraphs)
+
+################################################################################
+# source code
+################################################################################
+source('Function/getHisDataAV.R')
+source('Function/getFXECB.R')
+source('Function/getRisk.R')
+source('Function/bootstrapRisk.R')
+source('Function/filter.R')
+source('Function/utility.R')

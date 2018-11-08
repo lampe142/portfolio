@@ -1,0 +1,162 @@
+---
+title: <center> Max Portfolio </center>
+date: <center>'`r format(Sys.time(), "%d %B, %Y")`'</center>
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r echo=T, results='hide', echo=FALSE}
+suppressMessages(source('profileRep.R'))
+load("Data/Portfolio_Market.RData")
+```
+
+```{r include = TRUE, echo=FALSE, fig.align='center'}
+dp$position %>% subset(!(Category=='Benchmark') & (dp$risk$SharePortfolio>0.0001) ,
+  select=c('Category',
+           'SharePortfolio', 
+           'Value',
+           '1D.return',
+           "1D.logReturn",
+           "5D.logReturn",
+           "23D.logReturn",
+           "125D.logReturn",
+           "250D.logReturn")) %>% 
+  group_by(Category) %>% 
+  summarize(
+   Value=round(sum(Value),0),
+  `1D.return`=round(sum(`1D.return`),0),
+  SharePortfolio = sum(SharePortfolio),
+  `1D.logReturn`= sum(`1D.logReturn` * SharePortfolio),
+  `5D.logReturn`= sum(`5D.logReturn` * SharePortfolio),
+  `23D.logReturn`= sum(`23D.logReturn` * SharePortfolio),
+  `125D.logReturn`= sum(`125D.logReturn` * SharePortfolio),
+  `250D.logReturn`= sum(`250D.logReturn` * SharePortfolio)
+  ) %>% rename(D1.LR = `1D.logReturn`,
+         D5.LR = `5D.logReturn`,
+         D23.LR = `23D.logReturn`,
+         D125.LR = `125D.logReturn`,
+         D250.LR = `250D.logReturn`) -> t3
+
+t3%>%
+  datatable() %>%
+  formatPercentage('D1.LR', 2) %>%
+  formatStyle('D1.LR', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+formatPercentage('D5.LR', 2) %>%
+  formatStyle('D5.LR', background = color_from_middle(t2$D5.LR,'pink','lightgreen'))%>%
+  formatPercentage('D23.LR', 2) %>%
+  formatStyle('D23.LR', background = color_from_middle(t2$D23.LR,'pink','lightgreen'))%>%
+  formatPercentage('D125.LR', 2) %>%
+  formatStyle('D125.LR', background = color_from_middle(t2$D125.LR,'pink','lightgreen'))%>%
+  formatPercentage('D250.LR', 2) %>%
+  formatStyle('D250.LR', background = color_from_middle(t2$D250.LR,'pink','lightgreen'))%>%
+  formatPercentage('SharePortfolio', 1) %>%
+  formatStyle('SharePortfolio', background = color_from_middle(t2$SharePortfolio,'lightblue','lightblue'))
+```
+
+
+# Performance Overview Open Positions:
+<center>
+```{r include = TRUE, echo=FALSE, fig.align='center'}
+dp$position <-  replace(dp$position, is.na(dp$position),0)
+dp$position %>% subset((dp$position$SharePortfolio>0.001 &
+                          !is.na(dp$position$SharePortfolio)) | dp$position$Name == 'Portfolio:'| 
+                         dp$position$Category == 'Benchmark', 
+                       select=c("Category",'Name',
+                                'CloseDate','Value','Volume',
+                                'SharePortfolio',
+                                "1D.logReturn",
+  #                              "curr.1D.logReturn",
+                                "CAPM.Return",
+                                "1D.return",
+                                "5D.logReturn",
+                                "23D.logReturn",
+                                "125D.logReturn",
+                                "250D.logReturn")) %>% 
+  rename('D1.LR'='1D.logReturn')%>%
+ # rename('curD1.LR'='curr.1D.logReturn')%>%
+  rename('CAPM.Return'='CAPM.Return')%>%
+  rename('D1.R'='1D.return')%>%
+  rename('D5.LR'='5D.logReturn')%>%
+  rename('D23.LR'='23D.logReturn')%>%
+  rename('D125.LR'='125D.logReturn')%>%
+  rename('D250.LR'='250D.logReturn')%>%
+  mutate(Value=round(`Value`,0))%>%
+  mutate(D1.LR=round(`D1.LR`,2))%>%
+# mutate(curD1.LR=round(`curD1.LR`,2))%>%
+  mutate(D5.LR=round(`D5.LR`,2))%>%  
+  mutate(D23.LR=round(`D23.LR`,2))%>%
+  mutate(D125.LR=round(`D125.LR`,2))%>%  
+  mutate(D250.LR=round(`D250.LR`,2))%>%
+  plyr::arrange(Category,!SharePortfolio) -> t2
+
+  t2%>%
+  datatable(options=list(pageLength = 50, scrollX=T)) %>%
+  formatCurrency('D1.R', '\U20AC', digits = 1)  %>% 
+  formatPercentage('D1.LR', 2) %>%
+  formatStyle('D1.LR', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  #formatPercentage('curD1.LR', 2) %>%
+  #formatStyle('curD1.LR', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatPercentage('CAPM.Return', 2) %>%
+  formatStyle('CAPM.Return', background = color_from_middle(t2$CAPM.Return,'pink','lightgreen'))%>%
+  formatPercentage('D5.LR', 2) %>%
+  formatStyle('D5.LR', background = color_from_middle(t2$D5.LR,'pink','lightgreen'))%>%
+  formatPercentage('D23.LR', 2) %>%
+  formatStyle('D23.LR', background = color_from_middle(t2$D23.LR,'pink','lightgreen'))%>%
+  formatPercentage('D125.LR', 2) %>%
+  formatStyle('D125.LR', background = color_from_middle(t2$D125.LR,'pink','lightgreen'))%>%
+  formatPercentage('D250.LR', 2) %>%
+  formatStyle('D250.LR', background = color_from_middle(t2$D250.LR,'pink','lightgreen'))%>%
+  formatPercentage('SharePortfolio', 1) %>%
+  formatStyle('SharePortfolio', background = color_from_middle(t2$SharePortfolio,'lightblue','lightblue'))
+```
+</center>
+# Risk Overview Open Positions:
+<center>
+```{r include = TRUE, echo=FALSE}
+dp$risk %>% subset((dp$risk$SharePortfolio>0.001 &
+  !is.na(dp$risk$SharePortfolio)) | dp$risk$Name == 'Portfolio:', 
+  select=c("Category",'Name',
+           'SharePortfolio',
+           'Beta',
+           'Jensen.Alpha',
+           'std_log_returns_1Y',
+           'individual VaR Bootstrap',
+           'component_VaR',
+           'VaR_Share')) %>% 
+    plyr::arrange(!SharePortfolio) %>% 
+#  mutate(SharePortfolio = round(SharePortfolio,digits = 3)) %>% 
+  mutate(Beta = round(Beta,digits = 3)) %>% 
+  mutate(Jensen.Alpha = round(Jensen.Alpha,digits = 3)) %>% 
+  mutate(std_log_returns_1Y = round(std_log_returns_1Y,digits = 3) * 100) %>% 
+  rename(vola_1Y = std_log_returns_1Y) %>% 
+  mutate(component_VaR = round(component_VaR ,digits = 3)) %>% 
+  mutate(`individual VaR Bootstrap` = round(`individual VaR Bootstrap`,digits = 3)) %>% 
+  mutate(VaR_Share = round(VaR_Share,digits = 3)) -> risk.Table 
+
+risk.Table <- replace(risk.Table, is.na(risk.Table),0)
+
+  datatable(risk.Table, options=list(pageLength = 50)) %>%
+  formatPercentage('SharePortfolio', 1) %>%
+  formatStyle('SharePortfolio', background = color_from_middle(risk.Table$SharePortfolio,'pink','lightblue')) %>%
+  formatStyle('Beta', background = color_from_middle(risk.Table$Beta,'pink','pink')) %>%
+  formatStyle('Jensen.Alpha', background = color_from_middle(risk.Table$Jensen.Alpha,'pink','lightblue')) %>%
+  formatStyle('vola_1Y', background = color_from_middle(risk.Table$vola_1Y,'pink','pink')) %>%
+   formatPercentage('individual VaR Bootstrap', 2) %>%
+  formatStyle('individual VaR Bootstrap', background = color_from_middle(risk.Table$`individual VaR Bootstrap`,'pink','pink')) %>%
+    formatPercentage('component_VaR', 2) %>%
+  formatStyle('component_VaR', background = color_from_middle(risk.Table$component_VaR,'pink','pink')) %>%
+  formatPercentage('VaR_Share', 2) %>%
+  formatStyle('VaR_Share', background = color_from_middle(risk.Table$VaR_Share,'pink','pink')) -> risk.Table
+  risk.Table
+```
+</center>
+
+# Cboe Volatility Index:
+<center>
+```{r include = TRUE, echo=FALSE}
+dygraphs::dygraph(dp$vola$VIX,  main = paste(unlist(strsplit(as.character(end(dp$vola$VIX))," ")),"VIX S&P 500 ",round(tail(dp$vola$VIX,1),4),"Pt. Change",round(diff(tail(dp$vola$VIX,2))[2],4))) %>%
+  dyRangeSelector(height = 20)
+```
+</center>
