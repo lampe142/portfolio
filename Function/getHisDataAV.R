@@ -62,8 +62,8 @@ addTodp <- function(downAssets, pauseTime=20){
 
 
 getAllData <- function(pauseTime=20){
-#  dp$FX <- getFX(source = 'ECB'); tail(dp$FX)
-  dp$FX <<- getFX(source = 'ECB')
+#  test <- getFX(source = 'FRED'); tail(test)
+  dp$FX <<- getFX(source = 'FRED')
   dp1 <- list()
   dp2 <- list()
   dp1$avAdjClose <- getPortData(pauseTime=20, itCycle=10, test=F, 
