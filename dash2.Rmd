@@ -1,0 +1,65 @@
+---
+title: <center> Max Portfolio </center>
+date: <center>'`r format(Sys.time(), "%d %B, %Y")`'</center>
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r echo=T, results='hide', echo=FALSE}
+suppressMessages(source('profileRep.R'))
+load("Data/Portfolio_Market.RData")
+```
+
+```{r include = TRUE, echo=FALSE, fig.align='center'}
+dp$risk %>% subset(,select=names(dp$risk)[c(2:18,28,35,36,38,41,43,44,45)]) %>% 
+  plyr::arrange(!SharePortfolio)  -> risk.Table 
+#c(-1,-25,-26,-29,-30,-32,-33,-39,-40,-42)
+risk.Table <- replace(risk.Table, is.na(risk.Table),0)
+
+datatable(risk.Table, options=list(pageLength = 100)) %>%
+  formatRound('Value', digits = 0, interval = 3, mark = " ")%>%
+  formatPercentage('SharePortfolio', 1) %>%
+  formatStyle('SharePortfolio', background = color_from_middle(risk.Table$SharePortfolio,'pink','lightblue')) %>%
+  formatRound('Beta', digits = 2, interval = 3, mark = " ")%>%
+  formatStyle('Beta', background = color_from_middle(risk.Table$Beta,'pink','pink')) %>%
+  formatRound('Beta1Y', digits = 2, interval = 3, mark = " ")%>%
+  formatStyle('Beta1Y', background = color_from_middle(risk.Table$Beta1Y,'pink','pink')) %>%
+  formatPercentage('250D.logReturn', 1) %>%
+  formatStyle('250D.logReturn', background = color_from_middle(risk.Table$`250D.logReturn`,'pink','pink')) %>%
+  formatPercentage('250D.CAPM.Return', 1) %>%
+  formatStyle('250D.CAPM.Return', background = color_from_middle(risk.Table$`250D.CAPM.Return`,'pink','pink')) %>%
+    formatRound('Jensen.Alpha', digits = 2, interval = 3, mark = " ")%>%
+  formatStyle('Jensen.Alpha', background = color_from_middle(risk.Table$Jensen.Alpha,'pink','lightblue')) %>%
+  formatRound('std_log_returns', digits = 3, interval = 3, mark = " ")%>%
+  formatStyle('std_log_returns', background = color_from_middle(risk.Table$std_log_returns,'pink','pink')) %>%
+  formatRound('std_log_returns_1Y', digits = 3, interval = 3, mark = " ")%>%
+  formatStyle('std_log_returns_1Y', background = color_from_middle(risk.Table$std_log_returns_1Y,'pink','pink')) %>%
+    formatRound('VolaN1_MSGARCH', digits = 3, interval = 3, mark = " ")%>%
+  formatStyle('VolaN1_MSGARCH', background = color_from_middle(risk.Table$VolaN1_MSGARCH,'pink','pink')) %>%
+  formatPercentage('VaR Normal std1Y', 1) %>%
+  formatStyle('VaR Normal std1Y', background = color_from_middle(risk.Table$`VaR Normal std1Y`,'pink','pink')) %>%
+  formatPercentage('VaR Normal', 1) %>%
+  formatStyle('VaR Normal', background = color_from_middle(risk.Table$`VaR Normal`,'pink','pink')) %>%
+  formatPercentage('VaR HS 1Y', 1) %>%
+  formatStyle('VaR HS 1Y', background = color_from_middle(risk.Table$`VaR HS 1Y`,'pink','pink')) %>%
+    formatPercentage('component_VaR', 1) %>%
+  formatStyle('component_VaR', background = color_from_middle(risk.Table$component_VaR,'pink','pink')) %>%
+      formatPercentage('VaR_Share', 1) %>%
+  formatStyle('VaR_Share', background = color_from_middle(risk.Table$VaR_Share,'pink','pink')) %>%
+  formatPercentage('ES_MSGARCH', 1) %>%
+  formatStyle('ES_MSGARCH', background = color_from_middle(risk.Table$ES_MSGARCH,'pink','pink')) %>%
+    formatPercentage('ES bootstrap', 1) %>%
+  formatStyle('ES bootstrap', background = color_from_middle(risk.Table$`ES bootstrap`,'pink','pink')) %>%
+  formatPercentage('VaR bootstrap', 1) %>%
+  formatStyle('VaR bootstrap', background = color_from_middle(risk.Table$`VaR bootstrap`,'pink','pink')) %>%
+  formatPercentage('component VaR', 1) %>%
+  formatStyle('component VaR', background = color_from_middle(risk.Table$`component VaR`,'pink','pink')) %>%
+    formatPercentage('VaR Share', 1) %>%
+  formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'pink','pink')) %>%
+    formatPercentage('ind_VaR_MSGARCH', 1) %>%
+  formatStyle('ind_VaR_MSGARCH', background = color_from_middle(risk.Table$ind_VaR_MSGARCH,'pink','pink'))
+```
+
+

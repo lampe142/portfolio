@@ -1,6 +1,4 @@
 ## full risk table
-
-
 dp$risk %>% subset((dp$risk$SharePortfolio>0.001 &
                       !is.na(dp$risk$SharePortfolio)) | dp$risk$Name == 'Portfolio:', 
                    select=c("Category",'Name',

@@ -1,18 +1,18 @@
 ---
 title: <center> Max Portfolio </center>
 date: <center>'`r format(Sys.time(), "%d %B, %Y")`'</center>
-output:
+output: 
   html_document:
-    df_print: paged
-  pdf_document: default
+    includes:
+      after_body: footer.html
 ---
 
 ```{r echo=T, results='hide', echo=FALSE}
 suppressMessages(source('profileRep.R'))
-load("Data/Portfolio_Market.RData")
+load(paste0(here::here(),"/Data/Portfolio_Market.RData"))
 ```
 
-```{r include = TRUE, echo=FALSE, fig.align='center'}
+```{r include = TRUE, echo=FALSE}
 dp$position %>% subset(!(Category=='Benchmark') & (dp$risk$SharePortfolio>0.0001) ,
   select=c('Category',
            'SharePortfolio', 
@@ -37,9 +37,9 @@ dp$position %>% subset(!(Category=='Benchmark') & (dp$risk$SharePortfolio>0.0001
          D5.LR = `5D.logReturn`,
          D23.LR = `23D.logReturn`,
          D125.LR = `125D.logReturn`,
-         D250.LR = `250D.logReturn`) -> t3
+         D250.LR = `250D.logReturn`) -> t2
 
-t3%>%
+t2%>%
   datatable() %>%
   formatPercentage('D1.LR', 2) %>%
   formatStyle('D1.LR', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
@@ -58,7 +58,7 @@ formatPercentage('D5.LR', 2) %>%
 
 # Performance Overview Open Positions:
 <center>
-```{r include = TRUE, echo=FALSE, fig.align='center'}
+```{r include = TRUE, echo=FALSE}
 dp$position <-  replace(dp$position, is.na(dp$position),0)
 dp$position %>% subset((dp$position$SharePortfolio>0.001 &
                           !is.na(dp$position$SharePortfolio)) | dp$position$Name == 'Portfolio:'| 
@@ -92,7 +92,7 @@ dp$position %>% subset((dp$position$SharePortfolio>0.001 &
   plyr::arrange(Category,!SharePortfolio) -> t2
 
   t2%>%
-  datatable(options=list(pageLength = 50, scrollX=T)) %>%
+  datatable(options=list(pageLength = 50)) %>%
   formatCurrency('D1.R', '\U20AC', digits = 1)  %>% 
   formatPercentage('D1.LR', 2) %>%
   formatStyle('D1.LR', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
@@ -160,3 +160,5 @@ dygraphs::dygraph(dp$vola$VIX,  main = paste(unlist(strsplit(as.character(end(dp
   dyRangeSelector(height = 20)
 ```
 </center>
+
+

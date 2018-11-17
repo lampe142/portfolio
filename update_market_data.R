@@ -22,9 +22,11 @@ row.names(dp$position) <- dp$risk$AlphaVantage
 
 #Download data
 getAllCurrentAV()
-getAllData()
+getAllData(FXsource='ECB') 
+# tail(dp$avAdjClose$EEM,1)
+# tail(dp$FX$USEURO,1)
+# tail(dp$FX$rf1y,1)
 # addTodp(downAssets = c('MMNFF', 'KSHB')) 
-
 
 updatePositionRisk()
 mergeCloseRet()
@@ -33,9 +35,12 @@ updateRisk(dm$logRet, rf=dp$FX$rf1y)
 getRisk(logR = dm$logRet)
 bootRisk(logR = dm$logRet)
 
-save.image(paste0("~/Documents/Julia/Portfolio/Data/Portfolio_Market.RData"))
+
+save.image(paste0(here::here(),"/Data/Portfolio_Market.RData"))
 rmarkdown::render("dash.Rmd",output_file='Portfolio_Performance_Risk.html')
 browseURL("Portfolio_Performance_Risk.html")
+rmarkdown::render("dash2.Rmd",output_file='Portfolio_Risk.html')
+browseURL("Portfolio_Risk.html")
 source('send_portfolio_email.R')
 
 view(dp$position)
