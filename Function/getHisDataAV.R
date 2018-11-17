@@ -64,6 +64,7 @@ addTodp <- function(downAssets, pauseTime=20){
 getAllData <- function(pauseTime=20, FXsource='ECB'){
 #  x <- getFX(source = 'ECB'); tail(x$USEURO)
   dp$FX <<- getFX(source = FXsource)
+
   dp1 <- list()
   dp2 <- list()
   dp1$avAdjClose <- getPortData(pauseTime=20, itCycle=10, test=F, 
