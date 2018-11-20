@@ -2,7 +2,8 @@
 
 view <- function(table=dp$risk){
   View(table %>% subset(
-  !is.na(table$SharePortfolio) & table$SharePortfolio >0.001 | table$Name=="Portfolio:"))
+  !is.na(table$SharePortfolio) & table$SharePortfolio >0.001 | 
+    table$Name=="Portfolio:"), title = 'open Positions')
   return(NULL)
 }
 

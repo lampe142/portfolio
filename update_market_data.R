@@ -16,7 +16,7 @@ fileName = 'PositionInfo/full_Port.xlsx'
 dp <<- list()
 dm <<- list()
 dp$position <- readxl::read_excel(path=fileName, sheet='Position')
-dp$risk <- readxl::read_excel(path=fileName, sheet='Risk')
+dp$risk <- readxl::read_excel(path=fileName, sheet='Risk')#[,1:6]
 row.names(dp$risk) <- dp$risk$AlphaVantage
 row.names(dp$position) <- dp$risk$AlphaVantage
 
@@ -39,6 +39,8 @@ bootRisk(logR = dm$logRet)
 save.image(paste0(here::here(),"/Data/Portfolio_Market.RData"))
 rmarkdown::render("dash.Rmd",output_file='Portfolio_Performance_Risk.html')
 browseURL("Portfolio_Performance_Risk.html")
+
+
 rmarkdown::render("dash2.Rmd",output_file='Portfolio_Risk.html')
 browseURL("Portfolio_Risk.html")
 source('send_portfolio_email.R')
