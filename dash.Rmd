@@ -57,7 +57,7 @@ formatPercentage('D5.LR', 2) %>%
 
 
 # Performance Overview Open Positions:
-<center>
+
 ```{r include = TRUE, echo=FALSE}
 dp$position <-  replace(dp$position, is.na(dp$position),0)
 dp$position %>% subset((dp$position$SharePortfolio>0.001 &
