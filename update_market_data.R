@@ -1,6 +1,5 @@
 
-here::here()
-source('profileRep.R')
+
 
 
 ################################################################################
@@ -12,6 +11,9 @@ ailhVaR <- PerformanceAnalytics::VaR(R=dm$ret , method="gaussian",p=.95)
 ################################################################################
 # 
 ################################################################################
+here::here()
+source('profileRep.R')
+
 fileName = 'PositionInfo/full_Port.xlsx'
 dp <<- list()
 dm <<- list()
@@ -21,7 +23,6 @@ row.names(dp$risk) <- dp$risk$AlphaVantage
 row.names(dp$position) <- dp$risk$AlphaVantage
 
 #Download data
-getAllCurrentAV()
 getAllData(FXsource='ECB') 
 # tail(dp$avAdjClose$EEM,1)
 # tail(dp$FX$USEURO,1)
@@ -38,6 +39,7 @@ bootRisk(logR = dm$logRet)
 
 save.image(paste0(here::here(),"/Data/Portfolio_Market.RData"))
 rmarkdown::render("dash.Rmd",output_file='Portfolio_Performance_Risk.html')
+
 browseURL("Portfolio_Performance_Risk.html")
 
 

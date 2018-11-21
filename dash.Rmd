@@ -8,7 +8,7 @@ output:
 ---
 
 ```{r echo=T, results='hide', echo=FALSE}
-suppressMessages(source('profileRep.R'))
+# suppressMessages(source('profileRep.R'))
 load(paste0(here::here(),"/Data/Portfolio_Market.RData"))
 ```
 
