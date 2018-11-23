@@ -11,6 +11,7 @@ ailhVaR <- PerformanceAnalytics::VaR(R=dm$ret , method="gaussian",p=.95)
 ################################################################################
 # 
 ################################################################################
+source('install_packages.R')
 here::here()
 source('profileRep.R')
 
