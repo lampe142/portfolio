@@ -16,11 +16,12 @@ load("Data/Portfolio_Market.RData")
 # Open Positions:
 
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
+
 dp$risk %>% subset(dp$risk$SharePortfolio>0.0001 | dp$risk$Name == 'Portfolio:'
-  ,select=names(dp$risk)[c(2:18,28,38,41,43,45)]) %>%
-    mutate(std_log_returns = std_log_returns * 100) %>% 
-    mutate(std_log_returns_1Y = std_log_returns_1Y * 100) %>%
-    mutate(VolaN1_MSGARCH = VolaN1_MSGARCH * 100) %>%
+                   ,select=names(dp$risk)[c(2:18,28,37,40,42,44)]) %>%
+  mutate(std_log_returns = std_log_returns * 100) %>% 
+  mutate(std_log_returns_1Y = std_log_returns_1Y * 100) %>%
+  mutate(VolaN1_MSGARCH = VolaN1_MSGARCH * 100) %>%
   rename(`ind VaR MSGARCH`=ind_VaR_MSGARCH)%>%
   rename(`250D CAPM Return`=`250D.CAPM.Return`)%>%
   rename(`250D log Return`=`250D.logReturn`)%>%
@@ -30,6 +31,7 @@ dp$risk %>% subset(dp$risk$SharePortfolio>0.0001 | dp$risk$Name == 'Portfolio:'
   rename(`std N1 MSGARCH`= VolaN1_MSGARCH)%>%
   rename(`ES MSGARCH`= ES_MSGARCH)%>%
   plyr::arrange(!SharePortfolio)  -> risk.Table 
+
 #c(-1,-25,-26,-29,-30,-32,-33,-39,-40,-42)
 risk.Table <- replace(risk.Table, is.na(risk.Table),0)
 
@@ -78,10 +80,12 @@ formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'
 # Overview:
 
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
-dp$risk %>% subset((dp$risk$SharePortfolio==0 | is.na(dp$risk$SharePortfolio))& dp$risk$Name != 'Portfolio:' ,select=names(dp$risk)[c(2:18,28,38,41,43,45)]) %>%
-    mutate(std_log_returns = std_log_returns * 100) %>% 
-    mutate(std_log_returns_1Y = std_log_returns_1Y * 100) %>%
-    mutate(VolaN1_MSGARCH = VolaN1_MSGARCH * 100) %>%
+
+dp$risk %>% subset(dp$risk$SharePortfolio>0.0001 | dp$risk$Name == 'Portfolio:'
+                   ,select=names(dp$risk)[c(2:18,28,37,40,42,44)]) %>%
+  mutate(std_log_returns = std_log_returns * 100) %>% 
+  mutate(std_log_returns_1Y = std_log_returns_1Y * 100) %>%
+  mutate(VolaN1_MSGARCH = VolaN1_MSGARCH * 100) %>%
   rename(`ind VaR MSGARCH`=ind_VaR_MSGARCH)%>%
   rename(`250D CAPM Return`=`250D.CAPM.Return`)%>%
   rename(`250D log Return`=`250D.logReturn`)%>%
@@ -91,8 +95,7 @@ dp$risk %>% subset((dp$risk$SharePortfolio==0 | is.na(dp$risk$SharePortfolio))& 
   rename(`std N1 MSGARCH`= VolaN1_MSGARCH)%>%
   rename(`ES MSGARCH`= ES_MSGARCH)%>%
   plyr::arrange(!SharePortfolio)  -> risk.Table 
-#c(-1,-25,-26,-29,-30,-32,-33,-39,-40,-42)
-risk.Table <- replace(risk.Table, is.na(risk.Table),0)
+
 
 datatable(risk.Table, options=list(pageLength = 100)) %>%
   formatRound('Value', digits = 0, interval = 3, mark = " ")%>%
