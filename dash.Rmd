@@ -41,6 +41,7 @@ dp$position %>% subset(!(Category=='Benchmark') & (dp$risk$SharePortfolio>0.0001
 
 t2%>%
   datatable() %>%
+  formatCurrency('Value', '\U20AC', digits = 0) %>%
   formatPercentage('D1.LR', 2) %>%
   formatStyle('D1.LR', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
 formatPercentage('D5.LR', 2) %>%
@@ -83,17 +84,12 @@ dp$position %>% subset((dp$position$SharePortfolio>0.001 &
   rename('D125.LR'='125D.logReturn')%>%
   rename('D250.LR'='250D.logReturn')%>%
   mutate(Value=round(`Value`,0))%>%
-  mutate(D1.LR=round(`D1.LR`,2))%>%
-# mutate(curD1.LR=round(`curD1.LR`,2))%>%
-  mutate(D5.LR=round(`D5.LR`,2))%>%  
-  mutate(D23.LR=round(`D23.LR`,2))%>%
-  mutate(D125.LR=round(`D125.LR`,2))%>%  
-  mutate(D250.LR=round(`D250.LR`,2))%>%
   plyr::arrange(Category,!SharePortfolio) -> t2
 
   t2%>%
   datatable(options=list(pageLength = 50)) %>%
   formatCurrency('D1.R', '\U20AC', digits = 1)  %>% 
+  formatStyle('D1.R', backgroundColor = styleInterval('pink','lightgreen'))%>%
   formatPercentage('D1.LR', 2) %>%
   formatStyle('D1.LR', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
   #formatPercentage('curD1.LR', 2) %>%
