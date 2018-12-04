@@ -1,18 +1,14 @@
-
-
-
-
 ################################################################################
 # import data Test
 ################################################################################
-tail(getHisDataAV(symbolI='MMNFF', verbose=F, os='compact'),1)
-ailhVaR <- PerformanceAnalytics::VaR(R=dm$ret , method="gaussian",p=.95)
+# tail(getHisDataAV(symbolI='EEM', verbose=F, os='compact'),1)
+# ailhVaR <- PerformanceAnalytics::VaR(R=dm$ret , method="gaussian",p=.95)
 
 ################################################################################
 # 
 ################################################################################
-source('install_packages.R')
-here::here()
+# source('install_packages.R')
+setwd('/home/rstudio/portfolio_aws')
 source('profileRep.R')
 
 fileName = 'PositionInfo/full_Port.xlsx'
@@ -37,22 +33,22 @@ updateRisk(dm$logRet, rf=dp$FX$rf1y)
 getRisk(logR = dm$logRet)
 bootRisk(logR = dm$logRet)
 
+# tail(dm$logRet$EEM)
 
 save.image(paste0(here::here(),"/Data/Portfolio_Market.RData"))
+
 rmarkdown::render("dash.Rmd",output_file='Portfolio_Performance_Risk.html')
-
-browseURL("Portfolio_Performance_Risk.html")
-
+# browseURL("Portfolio_Performance_Risk.html")
 
 rmarkdown::render("dash2.Rmd",output_file='Portfolio_Risk.html')
-browseURL("Portfolio_Risk.html")
-source('send_portfolio_email.R')
+# browseURL("Portfolio_Risk.html")
 
-view(dp$position)
-View(dp$risk)
-View(dm$logRetFilMSGARCH1)
-View(dm$logRet)
+# tail(dp$avAdjClose$EEM,1)
+# view(dp$position)
+# View(dp$risk)
+# View(dm$logRetFilMSGARCH1)
+# View(dm$logRet)
+# View(can.price)
 
 save.image(paste0("~/Documents/Julia/Portfolio/Data/",Sys.Date()," market.RData"))
-
-exportToExcleOpen()
+#sum(dp$risk$`VaR Share`,na.rm=T)

@@ -1,7 +1,6 @@
 
-# install.packages("rvest")
-#Loading the rvest package
-library('rvest')
+setwd('/home/rstudio/portfolio_aws')
+source('send_email_profileRep.R')
 
 US.all.States <- read.csv("Data/price_weed_states.csv", header = F)
 load(file="Data/can_price.Rda")
@@ -78,4 +77,19 @@ for(iState in country$V1){
 can.price$date <- as.Date(can.price$date)
 # View(can.price)
 save(can.price,file="Data/can_price.Rda")
+load(file="Data/can_price.Rda")
+Sys.Date()-1
+can.priceRound <-  can.price
+can.priceRound$price <- round(can.price$price,4)
+can.priceRound %>% subset(state %in% country$V1 & quality =='High Quality',
+              #         (date=='Sys.Date()'| date=='Sys.Date()-1'), 
+                     select=c('date','state','price')) %>%
+reshape::cast(date~state) %>% tableHTML -> msgTable
 
+  html_bod <- paste0("<p> cannabis prices succes scrapped from priceofweed.coml. </p>", msgTable)
+  gmailr::mime() %>%
+    gmailr::to("maxlampe@posteo.de") %>%
+    gmailr::from("lampe142@googlemail.com")%>%
+    gmailr::subject(paste('Portfolio Risk Max', Sys.Date()))%>%
+    gmailr::html_body(msgTable)%>%
+    gmailr::send_message()

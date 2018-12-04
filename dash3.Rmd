@@ -81,7 +81,7 @@ formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'
 
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 
-dp$risk %>% subset(!(dp$risk$SharePortfolio>0.0001) | dp$risk$Name == 'Portfolio:'
+dp$risk %>% subset(dp$risk$SharePortfolio>0.0001 | dp$risk$Name == 'Portfolio:'
                    ,select=names(dp$risk)[c(2:18,28,37,40,42,44)]) %>%
   mutate(std_log_returns = std_log_returns * 100) %>% 
   mutate(std_log_returns_1Y = std_log_returns_1Y * 100) %>%
@@ -96,8 +96,6 @@ dp$risk %>% subset(!(dp$risk$SharePortfolio>0.0001) | dp$risk$Name == 'Portfolio
   rename(`ES MSGARCH`= ES_MSGARCH)%>%
   plyr::arrange(!SharePortfolio)  -> risk.Table 
 
-#c(-1,-25,-26,-29,-30,-32,-33,-39,-40,-42)
-risk.Table <- replace(risk.Table, is.na(risk.Table),0)
 
 datatable(risk.Table, options=list(pageLength = 100)) %>%
   formatRound('Value', digits = 0, interval = 3, mark = " ")%>%
@@ -125,8 +123,6 @@ datatable(risk.Table, options=list(pageLength = 100)) %>%
   formatStyle('VaR Normal', background = color_from_middle(risk.Table$`VaR Normal`,'pink','pink')) %>%
   formatPercentage('VaR HS 1Y', 1) %>%
   formatStyle('VaR HS 1Y', background = color_from_middle(risk.Table$`VaR HS 1Y`,'pink','pink')) %>%
-#  formatPercentage('VaR Share', 1) %>%
-#  formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR_Share`,'pink','pink')) %>%
   formatPercentage('ES MSGARCH', 1) %>%
   formatStyle('ES MSGARCH', background = color_from_middle(risk.Table$`ES MSGARCH`,'pink','pink')) %>%
     formatPercentage('ES bootstrap', 1) %>%
@@ -137,6 +133,5 @@ formatPercentage('VaR Share', 1) %>%
 formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'pink','pink')) %>%
     formatPercentage('ind VaR MSGARCH', 1) %>%
   formatStyle('ind VaR MSGARCH', background = color_from_middle(risk.Table$`ind VaR MSGARCH`,'pink','pink'))
-
-##dp$risk %>% subset((dp$risk$SharePortfolio==0 | is.na(dp$risk$SharePortfolio))& dp$risk$Name != 'Portfolio:'
 ```
+
