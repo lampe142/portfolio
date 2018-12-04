@@ -22,3 +22,11 @@ W <- as.logical(matrix(rbinom(50*10, 1, 0.1), 50, 10))
 x[W] <- NA
 dynfactoR::dfm(x, 2, 2, 1)
 
+
+###################
+devtools::install_github("fate-ewi/bayesdfa")
+library(bayesdfa)
+vignette("bayesdfa")
+
+
+
