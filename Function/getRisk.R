@@ -19,16 +19,29 @@ updateRisk <- function(logR, rf, nBoot=100){
     dp$risk[iAssPos, "Beta1Y"] <<- stats::cov(logR[paste(lY,tD,sep='/'), 'ACWI'], logR[paste(lY,tD,sep='/'), iAss]) /
       stats::var(logR[paste(lY,tD,sep='/'), 'ACWI'])
     
+    dm$logRetPort
+    
     # standard deviations
     dp$risk[iAssPos, "std_log_returns"]  <<- sd(logR[,iAss])
     dp$risk[iAssPos, "std_log_returns_1Y"] <<- sd(logR[paste(lY,tD,sep='/'), iAss])
   }
+  # compute stats for the entire Portfolio:
+  dp$risk['Port','Beta'] <<- stats::cov(logR[,"ACWI"], dm$logRetPort) / stats::var(logR[,"ACWI"])
+  dp$risk['Port','Beta1Y'] <<- stats::cov(logR[paste(lY,tD,sep='/'), 'ACWI'], dm$logRetPort[paste(lY,tD,sep='/')]) /
+  stats::var(logR[paste(lY,tD,sep='/'), 'ACWI'])
+  dp$risk['Port', "std_log_returns"]  <<- sd(dm$logRetPort)
+  dp$risk['Port', "std_log_returns_1Y"] <<- sd(dm$logRetPort[paste(lY,tD,sep='/')])
+  
+  
   dp$risk$'250D.CAPM.Return' <<- as.vector(coredata(tail(rf,1))) + dp$risk$Beta1Y*
     as.vector((base::mean(logR[paste(lY,tD,sep='/'),"ACWI"])*
                  length(logR[paste(lY,tD,sep='/'),"ACWI"])
                -coredata(tail(rf,1))))
   
   dp$position$'CAPM.Return' <<- as.vector(coredata(tail(rf,1))) + dp$risk$Beta1Y*
+    (coredata(tail(logR[,"ACWI"],1)) -coredata(tail(rf,1)))
+  
+  dp$position['Port','CAPM.Return'] <<- as.vector(coredata(tail(rf,1))) + dp$risk['Port','Beta1Y'] *
     (coredata(tail(logR[,"ACWI"],1)) -coredata(tail(rf,1)))
   
   

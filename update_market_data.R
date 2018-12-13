@@ -19,6 +19,10 @@ dp$risk <- readxl::read_excel(path=fileName, sheet='Risk')#[,1:6]
 row.names(dp$risk) <- dp$risk$AlphaVantage
 row.names(dp$position) <- dp$risk$AlphaVantage
 
+file.remove('dashboard/Portfolio_Performance_Risk.html')
+file.remove('dashboard/Portfolio_Risk.html')
+file.remove('Data/Portfolio_Market.RData')
+
 #Download data
 getAllData(FXsource='ECB') 
 # tail(dp$avAdjClose$EEM,1)
@@ -28,7 +32,7 @@ getAllData(FXsource='ECB')
 
 updatePositionRisk()
 mergeCloseRet()
-filterMSGARCHLogRet()
+# filterMSGARCHLogRet()
 updateRisk(dm$logRet, rf=dp$FX$rf1y)
 getRisk(logR = dm$logRet)
 bootRisk(logR = dm$logRet)
@@ -37,13 +41,14 @@ bootRisk(logR = dm$logRet)
 
 save.image(paste0(here::here(),"/Data/Portfolio_Market.RData"))
 
-rmarkdown::render("dash.Rmd",output_file='Portfolio_Performance_Risk.html')
-# browseURL("Portfolio_Performance_Risk.html")
 
-rmarkdown::render("dash2.Rmd",output_file='Portfolio_Risk.html')
-# browseURL("Portfolio_Risk.html")
+rmarkdown::render("dash.Rmd",output_file='dashboard/Portfolio_Performance_Risk.html')
+# browseURL("dashboard/Portfolio_Performance_Risk.html")
+rmarkdown::render("dash2.Rmd",output_file='dashboard/Portfolio_Risk.html')
+# browseURL("dashboard/Portfolio_Risk.html")
 
 # tail(dp$avAdjClose$EEM,1)
+# tail(dm$logRet,1)
 # view(dp$position)
 # View(dp$risk)
 # View(dm$logRetFilMSGARCH1)

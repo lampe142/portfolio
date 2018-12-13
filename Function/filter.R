@@ -22,5 +22,17 @@ dp$MSGARCH <<- list()
     dm$logRetFilMSGARCH1[,i] <<- suppressWarnings(as.numeric(dp$risk[i, "VolaN1_MSGARCH"]) * 
     (dm$logRet[,i] / MSGARCH::Volatility(dp$MSGARCH[[i]])))
   }
+spec = MSGARCH::CreateSpec(variance.spec = list(model = c("sGARCH", "sGARCH")), 
+                           distribution.spec = list(distribution = c("norm", "norm")))
+dp$MSGARCHPort <<- MSGARCH::FitML(spec = spec, data= dm$logRetPort)
+#save one step a head vola forecast
+dp$risk['Port',"VolaN1_MSGARCH"] <<-  stats::predict(object=dp$MSGARCHPort, nahead=1)$vol
+# get state probability of last date
+dp$risk['Port', "MSGARCH_prob"] <<- tail(State(dp$MSGARCHPort)$PredProb,1)
+MS_VaR_ES_Port <- MSGARCH::Risk(object = dp$MSGARCHPort, nahead = 1L, alpha=(1-level))
+if(verbose) print(paste(i,c('VaR:','ES:'), round(as.numeric(MS_VaR_ES_Port), digits=4)))
+dp$risk['Port',"ES_MSGARCH"] <<- MS_VaR_ES_Port$ES
+dp$risk['Port',"ind_VaR_MSGARCH"] <<- MS_VaR_ES_Port$VaR
+
   return()
 }

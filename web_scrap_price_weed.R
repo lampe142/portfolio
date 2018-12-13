@@ -90,6 +90,6 @@ reshape::cast(date~state) %>% tableHTML -> msgTable
   gmailr::mime() %>%
     gmailr::to("maxlampe@posteo.de") %>%
     gmailr::from("lampe142@googlemail.com")%>%
-    gmailr::subject(paste('Portfolio Risk Max', Sys.Date()))%>%
+    gmailr::subject(paste('Cannabis price', Sys.Date()))%>%
     gmailr::html_body(msgTable)%>%
     gmailr::send_message()

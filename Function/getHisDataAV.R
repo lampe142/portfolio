@@ -197,7 +197,7 @@ updatePositionRisk <- function(){
   }
   dp$position$Value <<- dp$position$Volume * dp$position$ClosePrice
   dp$risk$Value <<- dp$position$Value
-  dp$position$'1D.return' <<- dp$position$'1D.logReturn' * dp$position$Value
+  dp$position$'1D.return' <<- dp$position$'1D.logReturn' * dp$position$Value / (1 + dp$position$`1D.logReturn`)
   dp$position$SharePortfolio <<- dp$position$Value / sum(dp$position$Value, na.rm =T)
   dp$risk$SharePortfolio <<- dp$position$SharePortfolio
   
@@ -252,6 +252,10 @@ mergeCloseRet <- function(fx = dp$FX$USEURO, avAdjClose=dp$avAdjClose,
   dm$logRet <<- logReMer
   dm$assTicker <<- colnames(logReMer)
   dm$assDate <<- zoo::index(logReMer)
+  
+  dm$adjClosePort <<- xts(dm$adjClose %*%  dp$position$SharePortfolio[c(sel,F)], index(dm$adjClose[,1]))
+  dm$logRetPort <<- diff(log(dm$adjClosePort ), lag=1)[-1]
+  
   return()
 }
 

@@ -9,8 +9,15 @@ google.trends = gtrends(assetsID$ShortName[10], gprop = "news")[[1]]
 
 google.trends = gtrendsR::gtrends(c("namaste"), gprop = "web", time = "all")
 gt.namaste <- xts::xts(x=google.trends[[1]]$hits, order.by = google.trends[[1]]$date)
-
 # plot(gt.namaste)
+
+google.trends = gtrendsR::gtrends(c("inverted yield curve"), gprop = "web", time = "all")
+gt.namaste <- xts::xts(x=google.trends[[1]]$hits, order.by = google.trends[[1]]$date)
+
+google.trends = gtrendsR::gtrends(c("recession"), gprop = "web", time = "all")
+gt.namaste <- xts::xts(x=google.trends[[1]]$hits, order.by = google.trends[[1]]$date)
+plot(gt.namaste)
+
 
 library(nowcasting)
 data(USGDP)

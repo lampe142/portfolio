@@ -7,6 +7,7 @@ output:
       after_body: footer.html
 ---
 
+
 ```{r echo=T, results='hide', echo=FALSE}
 suppressMessages(source('profileRep.R'))
 load("Data/Portfolio_Market.RData")
@@ -16,26 +17,30 @@ load("Data/Portfolio_Market.RData")
 # Open Positions:
 
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
-
 dp$risk %>% subset(dp$risk$SharePortfolio>0.0001 | dp$risk$Name == 'Portfolio:'
                    ,select=names(dp$risk)[c(2:18,28,37,40,42,44)]) %>%
   mutate(std_log_returns = std_log_returns * 100) %>% 
   mutate(std_log_returns_1Y = std_log_returns_1Y * 100) %>%
   mutate(VolaN1_MSGARCH = VolaN1_MSGARCH * 100) %>%
-  rename(`ind VaR MSGARCH`=ind_VaR_MSGARCH)%>%
-  rename(`250D CAPM Return`=`250D.CAPM.Return`)%>%
-  rename(`250D log Return`=`250D.logReturn`)%>%
-  rename(`Jensen Alpha`=Jensen.Alpha)%>%
-  rename(`std log returns`=std_log_returns)%>%  
-  rename(`std log returns 1Y`=std_log_returns_1Y)%>%  
-  rename(`std N1 MSGARCH`= VolaN1_MSGARCH)%>%
-  rename(`ES MSGARCH`= ES_MSGARCH)%>%
+  dplyr::rename(`ind VaR MSGARCH`=ind_VaR_MSGARCH)%>%
+  dplyr::rename(`250D CAPM Return`=`250D.CAPM.Return`)%>%
+  dplyr::rename(`250D log Return`=`250D.logReturn`)%>%
+  dplyr::rename(`Jensen Alpha`=Jensen.Alpha)%>%
+  dplyr::rename(`std log returns`=std_log_returns)%>%  
+  dplyr::rename(`std log returns 1Y`=std_log_returns_1Y)%>%  
+  dplyr::rename(`std N1 MSGARCH`= VolaN1_MSGARCH)%>%
+  dplyr::rename(`ES MSGARCH`= ES_MSGARCH)%>%
   plyr::arrange(!SharePortfolio)  -> risk.Table 
 
 #c(-1,-25,-26,-29,-30,-32,-33,-39,-40,-42)
 risk.Table <- replace(risk.Table, is.na(risk.Table),0)
 
-datatable(risk.Table, options=list(pageLength = 100)) %>%
+datatable(risk.Table,
+            extensions = 'Buttons', options = list(pageLength = 100,
+    dom = 'Bfrtip',
+    buttons = list('copy', 'csv', 'excel', 'pdf', 'print',
+    list(extend = 'colvis',visible=F, targets= 0, columns = c(3:dim(risk.Table)[2])))
+        )) %>%
   formatRound('Value', digits = 0, interval = 3, mark = " ")%>%
   formatPercentage('SharePortfolio', 1) %>%
   formatStyle('SharePortfolio', background = color_from_middle(risk.Table$SharePortfolio,'pink','lightblue')) %>%
@@ -86,20 +91,24 @@ dp$risk %>% subset(!(dp$risk$SharePortfolio>0.0001) | dp$risk$Name == 'Portfolio
   mutate(std_log_returns = std_log_returns * 100) %>% 
   mutate(std_log_returns_1Y = std_log_returns_1Y * 100) %>%
   mutate(VolaN1_MSGARCH = VolaN1_MSGARCH * 100) %>%
-  rename(`ind VaR MSGARCH`=ind_VaR_MSGARCH)%>%
-  rename(`250D CAPM Return`=`250D.CAPM.Return`)%>%
-  rename(`250D log Return`=`250D.logReturn`)%>%
-  rename(`Jensen Alpha`=Jensen.Alpha)%>%
-  rename(`std log returns`=std_log_returns)%>%  
-  rename(`std log returns 1Y`=std_log_returns_1Y)%>%  
-  rename(`std N1 MSGARCH`= VolaN1_MSGARCH)%>%
-  rename(`ES MSGARCH`= ES_MSGARCH)%>%
+  dplyr::rename(`ind VaR MSGARCH`=ind_VaR_MSGARCH)%>%
+  dplyr::rename(`250D CAPM Return`=`250D.CAPM.Return`)%>%
+  dplyr::rename(`250D log Return`=`250D.logReturn`)%>%
+  dplyr::rename(`Jensen Alpha`=Jensen.Alpha)%>%
+  dplyr::rename(`std log returns`=std_log_returns)%>%  
+  dplyr::rename(`std log returns 1Y`=std_log_returns_1Y)%>%  
+  dplyr::rename(`std N1 MSGARCH`= VolaN1_MSGARCH)%>%
+  dplyr::rename(`ES MSGARCH`= ES_MSGARCH)%>%
   plyr::arrange(!SharePortfolio)  -> risk.Table 
 
 #c(-1,-25,-26,-29,-30,-32,-33,-39,-40,-42)
 risk.Table <- replace(risk.Table, is.na(risk.Table),0)
 
-datatable(risk.Table, options=list(pageLength = 100)) %>%
+datatable(risk.Table,extensions = 'Buttons', 
+          options = list(pageLength = 100,dom = 'Bfrtip',
+            buttons = list('copy', 'csv', 'excel', 'pdf', 'print',
+            list(extend = 'colvis', visible=F, columns = c(3:dim(risk.Table)[2]))))
+          ) %>%
   formatRound('Value', digits = 0, interval = 3, mark = " ")%>%
   formatPercentage('SharePortfolio', 1) %>%
   formatStyle('SharePortfolio', background = color_from_middle(risk.Table$SharePortfolio,'pink','lightblue')) %>%
