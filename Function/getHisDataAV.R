@@ -219,7 +219,7 @@ updatePositionRisk <- function(){
 
 ################################################################################
 # merges log Returns with sufficient data
-# fx = FX$USEURO
+# fx = dp$FX$USEURO
 # avAdjClose = dp$avAdjClose
 mergeCloseRet <- function(fx = dp$FX$USEURO, avAdjClose=dp$avAdjClose, 
   thres=list(dataMinLength=250, nLastDays=5, nLastDaysWind=10)){
@@ -253,6 +253,7 @@ mergeCloseRet <- function(fx = dp$FX$USEURO, avAdjClose=dp$avAdjClose,
   dm$assTicker <<- colnames(logReMer)
   dm$assDate <<- zoo::index(logReMer)
   
+  dp$position$SharePortfolio <- replace(dp$position$SharePortfolio, is.na(dp$position$SharePortfolio),0)
   dm$adjClosePort <<- xts(dm$adjClose %*%  dp$position$SharePortfolio[c(sel,F)], index(dm$adjClose[,1]))
   dm$logRetPort <<- diff(log(dm$adjClosePort ), lag=1)[-1]
   
