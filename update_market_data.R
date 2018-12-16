@@ -15,24 +15,26 @@ fileName = 'PositionInfo/full_Port.xlsx'
 dp <<- list()
 dm <<- list()
 dp$position <- readxl::read_excel(path=fileName, sheet='Position')
-dp$risk <- readxl::read_excel(path=fileName, sheet='Risk')#[,1:6]
+dp$risk <- readxl::read_excel(path=fileName, sheet='Risk') #[,1:6]
 row.names(dp$risk) <- dp$risk$AlphaVantage
 row.names(dp$position) <- dp$risk$AlphaVantage
 
-file.remove('dashboard/Portfolio_Performance_Risk.html')
-file.remove('dashboard/Portfolio_Risk.html')
+# delete old files
+file.remove('Dashboard/portfolio_performance.html')
+file.remove('Dashboard/portfolio_risk.html')
 file.remove('Data/Portfolio_Market.RData')
 
-#Download data
+# Download equity, FX, rate data
 getAllData(FXsource='ECB') 
 # tail(dp$avAdjClose$EEM,1)
 # tail(dp$FX$USEURO,1)
 # tail(dp$FX$rf1y,1)
 # addTodp(downAssets = c('MMNFF', 'KSHB')) 
 
+# Run Analysis
 updatePositionRisk()
 mergeCloseRet()
-# filterMSGARCHLogRet()
+filterMSGARCHLogRet()
 updateRisk(dm$logRet, rf=dp$FX$rf1y)
 getRisk(logR = dm$logRet)
 bootRisk(logR = dm$logRet)
@@ -40,12 +42,13 @@ bootRisk(logR = dm$logRet)
 # tail(dm$logRet$EEM)
 
 save.image(paste0(here::here(),"/Data/Portfolio_Market.RData"))
+save.image(paste0(here::here(),"/Backup/",Sys.Date()," Portfolio_Market.RData"))
 
 
-rmarkdown::render("dash.Rmd",output_file='dashboard/Portfolio_Performance_Risk.html')
-# browseURL("dashboard/Portfolio_Performance_Risk.html")
-rmarkdown::render("dash2.Rmd",output_file='dashboard/Portfolio_Risk.html')
-# browseURL("dashboard/Portfolio_Risk.html")
+rmarkdown::render("Dashboard/dash_performance.Rmd",output_file='portfolio_performance.html')
+# browseURL("Dashboard/portfolio_performance.html")
+rmarkdown::render("Dashboard/dash_risk.Rmd",output_file='portfolio_risk.html')
+# browseURL("Dashboard/portfolio_risk.html")
 
 # tail(dp$avAdjClose$EEM,1)
 # tail(dm$logRet,1)
@@ -54,6 +57,4 @@ rmarkdown::render("dash2.Rmd",output_file='dashboard/Portfolio_Risk.html')
 # View(dm$logRetFilMSGARCH1)
 # View(dm$logRet)
 # View(can.price)
-
-save.image(paste0("~/Documents/Julia/Portfolio/Data/",Sys.Date()," market.RData"))
 #sum(dp$risk$`VaR Share`,na.rm=T)

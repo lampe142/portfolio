@@ -1,14 +1,18 @@
 ---
-title: <center> Max Portfolio </center>
+title: "<center><div class='mytitle'> MY PORTFOLIO RISK ANALYSIS</div></center>"
 date: <center>'`r format(Sys.time(), "%d %B, %Y")`'</center>
+css: style.css
 output: 
   html_document:
-    includes:
-      after_body: footer.html
+   #  toc: FALSE
+   includes:
+    before_body: header.html
+    after_body: footer.html
 ---
 
 
 ```{r echo=T, results='hide', echo=FALSE}
+setwd('/home/rstudio/portfolio_aws')
 suppressMessages(source('profileRep.R'))
 load("Data/Portfolio_Market.RData")
 ```
@@ -146,6 +150,4 @@ formatPercentage('VaR Share', 1) %>%
 formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'pink','pink')) %>%
     formatPercentage('ind VaR MSGARCH', 1) %>%
   formatStyle('ind VaR MSGARCH', background = color_from_middle(risk.Table$`ind VaR MSGARCH`,'pink','pink'))
-
-##dp$risk %>% subset((dp$risk$SharePortfolio==0 | is.na(dp$risk$SharePortfolio))& dp$risk$Name != 'Portfolio:'
 ```

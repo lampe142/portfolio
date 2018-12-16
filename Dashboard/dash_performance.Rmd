@@ -1,15 +1,19 @@
 ---
-title: <center> Max Portfolio </center>
+title: "<center><div class='mytitle'> MY PORTFOLIO PERFORMANCE ANALYSIS</div></center>"
 date: <center>'`r format(Sys.time(), "%d %B, %Y")`'</center>
+css: style.css
 output: 
   html_document:
-    includes:
-      after_body: footer.html
+   #  toc: FALSE
+   includes:
+    before_body: header.html
+    after_body: footer.html
 ---
 
 ```{r echo=T, results='hide', echo=FALSE}
-# suppressMessages(source('profileRep.R'))
-load(paste0(here::here(),"/Data/Portfolio_Market.RData"))
+setwd('/home/rstudio/portfolio_aws')
+suppressMessages(source('profileRep.R'))
+load("Data/Portfolio_Market.RData")
 ```
 
 ```{r include = TRUE, echo=FALSE}
@@ -183,9 +187,7 @@ risk.Table <- replace(risk.Table, is.na(risk.Table),0)
 # Cboe Volatility Index:
 <center>
 ```{r include = TRUE, echo=FALSE}
-dygraphs::dygraph(dp$vola$VIX,  main = paste(unlist(strsplit(as.character(end(dp$vola$VIX))," ")),"VIX S&P 500 ",round(tail(dp$vola$VIX,1),4),"Pt. Change",round(diff(tail(dp$vola$VIX,2))[2],4))) %>%
+dygraphs::dygraph(tail(dp$vola$VIX, 360),  main = paste(unlist(strsplit(as.character(end(dp$vola$VIX))," ")),"VIX S&P 500 ",round(tail(dp$vola$VIX,1),4),"Pt. Change",round(diff(tail(dp$vola$VIX,2))[2],4))) %>%
   dyRangeSelector(height = 20)
 ```
 </center>
-
-
