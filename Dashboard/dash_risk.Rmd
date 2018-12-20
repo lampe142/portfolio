@@ -15,6 +15,7 @@ output:
 setwd('/home/rstudio/portfolio_aws')
 suppressMessages(source('profileRep.R'))
 load("Data/Portfolio_Market.RData")
+load("Data/portRisk.RData")
 ```
 
   
@@ -151,3 +152,33 @@ formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'
     formatPercentage('ind VaR MSGARCH', 1) %>%
   formatStyle('ind VaR MSGARCH', background = color_from_middle(risk.Table$`ind VaR MSGARCH`,'pink','pink'))
 ```
+
+# Vola Index:
+```{r include = TRUE, echo=FALSE, fig.align='center'}
+dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate), 
+  x = portRisk[,c("VolaN1_MSGARCH","std_log_returns","std_log_returns_1Y")]),  main = '') %>%
+  dyRangeSelector(height = 20)
+```
+
+# VaR Index:
+```{r include = TRUE, echo=FALSE, fig.align='center'}
+dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate), 
+  x = portRisk[,c("VaR Normal",
+                  "VaR Normal std1Y","VaR HS 1Y",
+                  "ind_VaR_MSGARCH",
+                  "VaR_bootstrap")]),  main = '') %>%
+  dyRangeSelector(height = 20)
+```
+
+# ES Index:
+```{r include = TRUE, echo=FALSE, fig.align='center'}
+dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate), 
+  x = portRisk[,c("ES_MSGARCH",
+                  "ES bootstrap 05Quantile",
+                  "ES bootstrap 95Quantile",
+                  "ES bootstrap")]),  main = '') %>%
+  dyRangeSelector(height = 20)
+```
+
+</center>
+

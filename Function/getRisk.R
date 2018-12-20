@@ -158,3 +158,12 @@ mVaR <- function(logR, hVaR.weight, position, hVaR.index){
   return(mVaR)
 }
 
+
+#
+savePortRisk <- function(){
+  load(paste0(here::here(),"/Data/portRisk.RData"))
+  portRisk <- rbind(portRisk, dp$risk["Port",])
+  save(file=paste0(here::here(),"/Data/portRisk.RData"), portRisk)
+}
+
+

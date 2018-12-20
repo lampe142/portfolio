@@ -43,12 +43,14 @@ bootRisk(logR = dm$logRet)
 
 save.image(paste0(here::here(),"/Data/Portfolio_Market.RData"))
 save.image(paste0(here::here(),"/Backup/",Sys.Date()," Portfolio_Market.RData"))
+savePortRisk()
 
-
-rmarkdown::render("Dashboard/dash_performance.Rmd",output_file='portfolio_performance.html')
+# rmarkdown::render("Dashboard/dash_performance.Rmd",output_file="portfolio_performance.html")
 # browseURL("Dashboard/portfolio_performance.html")
-rmarkdown::render("Dashboard/dash_risk.Rmd",output_file='portfolio_risk.html')
+# rmarkdown::render("Dashboard/dash_risk.Rmd",output_file="portfolio_risk.html")
 # browseURL("Dashboard/portfolio_risk.html")
+
+# source('E-Mail/send_portfolio_email.R')
 
 # tail(dp$avAdjClose$EEM,1)
 # tail(dm$logRet,1)
