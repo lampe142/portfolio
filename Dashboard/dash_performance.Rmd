@@ -11,7 +11,7 @@ output:
 ---
 
 ```{r echo=T, results='hide', echo=FALSE}
-setwd('/home/rstudio/portfolio_aws')
+setwd(here::here())
 suppressMessages(source('profileRep.R'))
 load("Data/Portfolio_Market.RData")
 ```
