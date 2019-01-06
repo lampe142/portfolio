@@ -8,7 +8,8 @@
 # 
 ################################################################################
 # source('install_packages.R')
-setwd('/home/rstudio/portfolio_aws')
+
+setwd(here::here())
 source('profileRep.R')
 
 fileName = 'PositionInfo/full_Port.xlsx'
