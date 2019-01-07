@@ -1,4 +1,4 @@
-setwd('/home/rstudio/portfolio_aws')
+setwd(here::here())
 source('E-Mail/send_email_profileRep.R')
 
 gmailr::mime() %>%
