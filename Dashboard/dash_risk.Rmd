@@ -154,13 +154,15 @@ formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'
 ```
 
 # Vola Index:
+<center>
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate), 
   x = portRisk[,c("VolaN1_MSGARCH","std_log_returns","std_log_returns_1Y")]),  main = '') %>%
   dyRangeSelector(height = 20)
 ```
-
+</center>
 # VaR Index:
+<center>
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate), 
   x = portRisk[,c("VaR Normal",
@@ -169,8 +171,9 @@ dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate),
                   "VaR_bootstrap")]),  main = '') %>%
   dyRangeSelector(height = 20)
 ```
-
+</center>
 # ES Index:
+<center>
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate), 
   x = portRisk[,c("ES_MSGARCH",
@@ -179,6 +182,5 @@ dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate),
                   "ES bootstrap")]),  main = '') %>%
   dyRangeSelector(height = 20)
 ```
-
 </center>
 
