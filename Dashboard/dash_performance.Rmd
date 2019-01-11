@@ -19,6 +19,8 @@ suppressMessages(source('profileRep.R'))
 load("Data/Portfolio_Market.RData")
 ```
 
+
+<p style="text-align: center;">  Performance aggregated by category: </p>
 ```{r include = TRUE, echo=FALSE}
 dp$position %>% subset(!(Category=='Benchmark') & (dp$risk$SharePortfolio>0.0001) ,
                        select=c('Category',
@@ -89,8 +91,8 @@ formatPercentage('D5.LR', 2) %>%
   formatStyle('SharePortfolio', background = color_from_middle(t2$SharePortfolio,'lightblue','lightblue'))
 ```
 
+<p style="text-align: center;">  Performance Overview Open Positions: </p>
 
-# Performance Overview Open Positions:
 
 ```{r include = TRUE, echo=FALSE}
 dp$position <-  replace(dp$position, is.na(dp$position),0)
@@ -141,8 +143,8 @@ dp$position %>% subset((dp$position$SharePortfolio>0.001 &
   formatStyle('SharePortfolio', background = color_from_middle(t2$SharePortfolio,'lightblue','lightblue'))
 ```
 
+<p style="text-align: center;"> # Porfolio Performance Index: </p>
 
-# Porfolio Performance Index:
 <center>
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 textMain <- paste0(as.character(end(dm$logRetPort)),' Daily log return: ' , round(tail(dm$logRetPort,1)*100,2),'% ',
@@ -151,15 +153,17 @@ textMain <- paste0(as.character(end(dm$logRetPort)),' Daily log return: ' , roun
 close360d <- as.vector(window(dm$adjClosePort, start=Sys.Date()-364, end = Sys.Date())[1])
 
 dygraphs::dygraph(dm$adjClosePort[paste0(Sys.Date()-360,'/',Sys.Date())]/ close360d, 
-                  main =textMain, width = 1600)  %>%
+                  main =textMain, width = 1800)  %>%
   dyRangeSelector(height = 20)
 ```
 </center>
 
-# Cboe Volatility Index:
+
+<p style="text-align: center;"> # Cboe Volatility Index: </p>
 <center>
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
-dygraphs::dygraph(dp$vola$VIX[paste0(Sys.Date()-360,'/',Sys.Date())],  main = paste(unlist(strsplit(as.character(end(dp$vola$VIX))," ")),"VIX S&P 500 ",round(tail(dp$vola$VIX,1),4),"Pt. Change",round(diff(tail(dp$vola$VIX,2))[2],4))) %>%
+dygraphs::dygraph(dp$vola$VIX[paste0(Sys.Date()-360,'/',Sys.Date())],  main = paste(unlist(strsplit(as.character(end(dp$vola$VIX))," ")),"VIX S&P 500 ",round(tail(dp$vola$VIX,1),4),"Pt. Change",round(diff(tail(dp$vola$VIX,2))[2],4))
+                  , width = 1800) %>%
   dyRangeSelector(height = 20)
 ```
 </center>
