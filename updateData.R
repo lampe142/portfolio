@@ -8,11 +8,13 @@
 # 
 ################################################################################
 # source('install_packages.R')
-
-setwd(here::here())
-print(getwd())
+ setwd('/home/rstudio/portfolio')
+# setwd(thisfile())
+# setwd(here::here())
+print(paste('########### 1. Set working directory',getwd()))
 source('profileRep.R')
 
+print(paste('########### 2. Read Input'))
 fileName = 'PositionInfo/full_Port.xlsx'
 dp <<- list()
 dm <<- list()
@@ -22,18 +24,21 @@ row.names(dp$risk) <- dp$risk$AlphaVantage
 row.names(dp$position) <- dp$risk$AlphaVantage
 
 # delete old files
-file.remove('Dashboard/portfolio_performance.html')
-file.remove('Dashboard/portfolio_risk.html')
-file.remove('Data/Portfolio_Market.RData')
+# file.remove('Dashboard/portfolio_performance.html')
+# file.remove('Dashboard/portfolio_risk.html')
+# file.remove('Data/Portfolio_Market.RData')
 
 # Download equity, FX, rate data
-getAllData(FXsource='ECB') 
+print(paste('########### 3. Get Market Data'))
+# getAllData(FXsource ='ECB') 
 # tail(dp$avAdjClose$EEM,1)
 # tail(dp$FX$USEURO,1)
 # tail(dp$FX$rf1y,1)
 # addTodp(downAssets = c('MMNFF', 'KSHB')) 
 
 # Run Analysis
+print(paste('########### 4. Run Risk and Performance Analysis'))
+load("~/portfolio/Data/Portfolio_Market.RData")
 updatePositionRisk()
 mergeCloseRet()
 filterMSGARCHLogRet()
@@ -43,17 +48,20 @@ bootRisk(logR = dm$logRet)
 
 # tail(dm$logRet$EEM)
 
+print(paste('########### 5. Save output'))
 save.image(paste0(here::here(),"/Data/Portfolio_Market.RData"))
 save.image(paste0(here::here(),"/Backup/",Sys.Date()," Portfolio_Market.RData"))
 savePortRisk()
 
-# rmarkdown::render("Dashboard/dash_performance.Rmd",output_file="portfolio_performance.html")
+rmarkdown::render("Dashboard/dash_performance.Rmd",output_file="portfolio_performance.html")
 # browseURL("Dashboard/portfolio_performance.html")
-# rmarkdown::render("Dashboard/dash_risk.Rmd",output_file="portfolio_risk.html")
+rmarkdown::render("Dashboard/dash_risk.Rmd",output_file="portfolio_risk.html")
 # browseURL("Dashboard/portfolio_risk.html")
 
-# source('E-Mail/send_portfolio_email.R')
+print(paste('########### 6. Send Dashboards by E-Mail'))
+source('E-Mail/send_portfolio_email.R')
 
+print(paste('########### 7. updated completed'))
 # tail(dp$avAdjClose$EEM,1)
 # tail(dm$logRet,1)
 # view(dp$position)

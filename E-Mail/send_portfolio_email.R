@@ -1,7 +1,7 @@
 setwd(here::here())
 source('E-Mail/send_email_profileRep.R')
-options(httr_oob_default=TRUE) 
-gar_auth(token = ".httr-oauth",new_user = FALSE) 
+# options(httr_oob_default=TRUE) 
+# gar_auth(token = ".httr-oauth",new_user = FALSE) 
 gmailr::mime() %>%
   gmailr::to("maxlampe@posteo.de") %>%
   gmailr::from("lampe142@googlemail.com")%>%

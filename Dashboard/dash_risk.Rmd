@@ -168,7 +168,7 @@ dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate),
   x = portRisk[,c("VaR Normal",
                   "VaR Normal std1Y","VaR HS 1Y",
                   "ind_VaR_MSGARCH",
-                  "VaR_bootstrap")]),  main = '') %>%
+                  "VaR_bootstrap")]),  main = '', width = 1800) %>%
   dyRangeSelector(height = 20)
 ```
 </center>
@@ -179,7 +179,7 @@ dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate),
   x = portRisk[,c("ES_MSGARCH",
                   "ES bootstrap 05Quantile",
                   "ES bootstrap 95Quantile",
-                  "ES bootstrap")]),  main = '') %>%
+                  "ES bootstrap")]),  main = '', width = 1800) %>%
   dyRangeSelector(height = 20)
 ```
 </center>

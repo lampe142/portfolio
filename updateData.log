@@ -1,7 +1,438 @@
-Error in file(filename, "r", encoding = encoding) : 
-  cannot open the connection
-Calls: source -> file
-In addition: Warning message:
-In file(filename, "r", encoding = encoding) :
-  cannot open file 'profileRep.R': No such file or directory
+[1] "########### 1. Set working directory /home/rstudio/portfolio"
+Loading required package: ggplot2
+Loading required package: zoo
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Loading required package: openxlsx
+Loading required package: bootstrap
+Loading required package: MSGARCH
+[1] "########### 1. Set working directory /home/rstudio/portfolio"
+Loading required package: ggplot2
+Loading required package: zoo
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Loading required package: openxlsx
+Loading required package: bootstrap
+Loading required package: MSGARCH
+Loading required package: gtrendsR
+Loading required package: formattable
+Loading required package: DT
+Loading required package: kableExtra
+Loading required package: scales
+
+Attaching package: ‘scales’
+
+The following objects are masked from ‘package:formattable’:
+
+    comma, percent, scientific
+
+Loading required package: xts
+Loading required package: dplyr
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:xts’:
+
+    first, last
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Loading required package: dygraphs
+Loading required package: readxl
+Loading required package: alfred
+Loading required package: httr
+Loading required package: ecb
+[1] "########### 2. Read Input"
+readxl works best with a newer version of the tibble package.
+You currently have tibble v1.4.2.
+Falling back to column name repair from tibble <= v1.4.2.
+Message displays once per session.
+Warning message:
+In read_fun(path = enc2native(normalizePath(path)), sheet_i = sheet,  :
+  Expecting numeric in G79 / R79C7: got a date
+Warning message:
+Setting row names on a tibble is deprecated. 
+Warning message:
+Setting row names on a tibble is deprecated. 
+[1] "########### 3. Get Market Data"
+[1] "########### 4. Run Risk and Performance Analysis"
+Loading required package: gtrendsR
+Loading required package: formattable
+Loading required package: DT
+Loading required package: kableExtra
+Loading required package: scales
+
+Attaching package: ‘scales’
+
+The following objects are masked from ‘package:formattable’:
+
+    comma, percent, scientific
+
+Loading required package: xts
+Loading required package: dplyr
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:xts’:
+
+    first, last
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Loading required package: dygraphs
+Loading required package: readxl
+Loading required package: alfred
+Loading required package: httr
+Loading required package: ecb
+[1] "########### 2. Read Input"
+readxl works best with a newer version of the tibble package.
+You currently have tibble v1.4.2.
+Falling back to column name repair from tibble <= v1.4.2.
+Message displays once per session.
+Warning message:
+In read_fun(path = enc2native(normalizePath(path)), sheet_i = sheet,  :
+  Expecting numeric in G79 / R79C7: got a date
+Warning message:
+Setting row names on a tibble is deprecated. 
+Warning message:
+Setting row names on a tibble is deprecated. 
+[1] "########### 3. Get Market Data"
+[1] "########### 4. Run Risk and Performance Analysis"
+NULL
+There were 50 or more warnings (use warnings() to see the first 50)
+NULL
+[1] "EEM VaR: -0.0378" "EEM ES: -0.0417" 
+[1] "ACWI VaR: -0.037" "ACWI ES: -0.0419"
+[1] "ORHOF VaR: -0.1606" "ORHOF ES: -0.1829" 
+[1] "CNTTF VaR: -0.15"  "CNTTF ES: -0.1728"
+[1] "NXTTF VaR: -0.3066" "NXTTF ES: -0.3301" 
+[1] "NWKRF VaR: -0.2578" "NWKRF ES: -0.317"  
+[1] "CRON VaR: -0.1672" "CRON ES: -0.2011" 
+[1] "APHA VaR: -0.1808" "APHA ES: -0.2122" 
+[1] "CGC VaR: -0.1886" "CGC ES: -0.2064" 
+[1] "ACB VaR: -0.1552" "ACB ES: -0.1939" 
+[1] "KSHB VaR: -0.1542" "KSHB ES: -0.1789" 
+[1] "SPVNF VaR: -0.2104" "SPVNF ES: -0.2508" 
+[1] "AAPL VaR: -0.0814" "AAPL ES: -0.0935" 
+NULL
+There were 50 or more warnings (use warnings() to see the first 50)
+NULL
+[1] "CBIS VaR: -0.1585" "CBIS ES: -0.1849" 
+[1] "EEM VaR: -0.0378" "EEM ES: -0.0417" 
+[1] "ACWI VaR: -0.037" "ACWI ES: -0.0419"
+[1] "ORHOF VaR: -0.1606" "ORHOF ES: -0.1829" 
+[1] "CNTTF VaR: -0.15"  "CNTTF ES: -0.1728"
+[1] "NXTTF VaR: -0.3066" "NXTTF ES: -0.3301" 
+[1] "NWKRF VaR: -0.2578" "NWKRF ES: -0.317"  
+[1] "CRON VaR: -0.1672" "CRON ES: -0.2011" 
+[1] "APHA VaR: -0.1808" "APHA ES: -0.2122" 
+[1] "CGC VaR: -0.1886" "CGC ES: -0.2064" 
+[1] "ACB VaR: -0.1552" "ACB ES: -0.1939" 
+[1] "KSHB VaR: -0.1542" "KSHB ES: -0.1789" 
+[1] "SPVNF VaR: -0.2104" "SPVNF ES: -0.2508" 
+[1] "AAPL VaR: -0.0814" "AAPL ES: -0.0935" 
+[1] "CBIS VaR: -0.1585" "CBIS ES: -0.1849" 
+[1] "GRNH VaR: -0.168" "GRNH ES: -0.2151"
+[1] "HLSPY VaR: -0.1464" "HLSPY ES: -0.1874" 
+[1] "ARGT VaR: -0.0707" "ARGT ES: -0.079"  
+[1] "EWY VaR: -0.0417" "EWY ES: -0.0477" 
+[1] "HEWJ VaR: -0.0451" "HEWJ ES: -0.0526" 
+[1] "EPU VaR: -0.0234" "EPU ES: -0.0333" 
+[1] "LIT VaR: -0.0485" "LIT ES: -0.0556" 
+[1] "EMFM VaR: -0.0305" "EMFM ES: -0.0346" 
+[1] "EWP VaR: -0.0276" "EWP ES: -0.0323" 
+[1] "BABA VaR: -0.0934" "BABA ES: -0.1026" 
+[1] "JD VaR: -0.0993" "JD ES: -0.1123" 
+[1] "ATVI VaR: -0.0737" "ATVI ES: -0.0857" 
+[1] "EA VaR: -0.0634" "EA ES: -0.078"  
+[1] "APTV VaR: -0.0668" "APTV ES: -0.0756" 
+[1] "TEL VaR: -0.0546" "TEL ES: -0.0616" 
+[1] "QQQC VaR: -0.0574" "QQQC ES: -0.0644" 
+[1] "COPX VaR: -0.0518" "COPX ES: -0.0578" 
+[1] "EWI VaR: -0.0383" "EWI ES: -0.0437" 
+[1] "EWD VaR: -0.0415" "EWD ES: -0.0469" 
+[1] "EWO VaR: -0.0626" "EWO ES: -0.0708" 
+[1] "EWN VaR: -0.0358" "EWN ES: -0.0407" 
+[1] "EIRL VaR: -0.0376" "EIRL ES: -0.0426" 
+[1] "EDEN VaR: -0.0341" "EDEN ES: -0.0386" 
+[1] "EFNL VaR: -0.0435" "EFNL ES: -0.0473" 
+[1] "ENOR VaR: -0.0474" "ENOR ES: -0.0516" 
+[1] "EWA VaR: -0.0392" "EWA ES: -0.0452" 
+[1] "EWT VaR: -0.0394" "EWT ES: -0.0436" 
+[1] "EZA VaR: -0.0554" "EZA ES: -0.0634" 
+[1] "BWA VaR: -0.073" "BWA ES: -0.0817"
+[1] "LQSIF VaR: -0.1497" "LQSIF ES: -0.1931" 
+[1] "GWPH VaR: -0.1226" "GWPH ES: -0.1422" 
+[1] "AVAV VaR: -0.1077" "AVAV ES: -0.1484" 
+[1] "BYDDF VaR: -0.0766" "BYDDF ES: -0.088"  
+[1] "GELYF VaR: -0.0846" "GELYF ES: -0.0972" 
+[1] "EWQ VaR: -0.0341" "EWQ ES: -0.039"  
+[1] "FINX VaR: -0.069" "FINX ES: -0.0753"
+[1] "TCEHY VaR: -0.0684" "TCEHY ES: -0.0808" 
+[1] "APH VaR: -0.0624" "APH ES: -0.0698" 
+[1] "NVDA VaR: -0.1143" "NVDA ES: -0.1347" 
+[1] "EWG VaR: -0.0363" "EWG ES: -0.0407" 
+[1] "EWU VaR: -0.0238" "EWU ES: -0.0271" 
+[1] "EWL VaR: -0.0286" "EWL ES: -0.0327" 
+[1] "EIS VaR: -0.0432" "EIS ES: -0.0483" 
+[1] "ENZL VaR: -0.0333" "ENZL ES: -0.037"  
+[1] "EWH VaR: -0.0339" "EWH ES: -0.0368" 
+[1] "MAG VaR: -0.0779" "MAG ES: -0.0897" 
+[1] "ITHUF VaR: -0.1214" "ITHUF ES: -0.145"  
+[1] "LULU VaR: -0.0815" "LULU ES: -0.1027" 
+[1] "ITEQ VaR: -0.0516" "ITEQ ES: -0.0559" 
+[1] "BOTZ VaR: -0.0601" "BOTZ ES: -0.0665" 
+[1] "BJK VaR: -0.0592" "BJK ES: -0.0645" 
+[1] "EWJ VaR: -0.0373" "EWJ ES: -0.0442" 
+[1] "SHOP VaR: -0.1211" "SHOP ES: -0.1435" 
+[1] "PAOTF VaR: -0.1874" "PAOTF ES: -0.2276" 
+[1] "TTWO VaR: -0.0797" "TTWO ES: -0.1013" 
+[1] "EWK VaR: -0.0343" "EWK ES: -0.0383" 
+[1] "EWK VaR: -0.0518" "EWK ES: -0.0551" 
+NULL
+NULL
+Warning message:
+In dp$risk$Beta1Y * (coredata(tail(logR[, "ACWI"], 1)) - coredata(tail(rf,  :
+  Recycling array of length 1 in vector-array arithmetic is deprecated.
+  Use c() or as.vector() instead.
+
+[1] "GRNH VaR: -0.168" "GRNH ES: -0.2151"
+[1] "HLSPY VaR: -0.1464" "HLSPY ES: -0.1874" 
+[1] "ARGT VaR: -0.0707" "ARGT ES: -0.079"  
+[1] "EWY VaR: -0.0417" "EWY ES: -0.0477" 
+[1] "HEWJ VaR: -0.0451" "HEWJ ES: -0.0526" 
+[1] "EPU VaR: -0.0234" "EPU ES: -0.0333" 
+[1] "LIT VaR: -0.0485" "LIT ES: -0.0556" 
+[1] "EMFM VaR: -0.0305" "EMFM ES: -0.0346" 
+[1] "EWP VaR: -0.0276" "EWP ES: -0.0323" 
+[1] "BABA VaR: -0.0934" "BABA ES: -0.1026" 
+[1] "JD VaR: -0.0993" "JD ES: -0.1123" 
+[1] "ATVI VaR: -0.0737" "ATVI ES: -0.0857" 
+[1] "EA VaR: -0.0634" "EA ES: -0.078"  
+[1] "APTV VaR: -0.0668" "APTV ES: -0.0756" 
+[1] "TEL VaR: -0.0546" "TEL ES: -0.0616" 
+[1] "QQQC VaR: -0.0574" "QQQC ES: -0.0644" 
+[1] "COPX VaR: -0.0518" "COPX ES: -0.0578" 
+[1] "EWI VaR: -0.0383" "EWI ES: -0.0437" 
+[1] "EWD VaR: -0.0415" "EWD ES: -0.0469" 
+[1] "EWO VaR: -0.0626" "EWO ES: -0.0708" 
+[1] "EWN VaR: -0.0358" "EWN ES: -0.0407" 
+[1] "EIRL VaR: -0.0376" "EIRL ES: -0.0426" 
+[1] "EDEN VaR: -0.0341" "EDEN ES: -0.0386" 
+[1] "EFNL VaR: -0.0435" "EFNL ES: -0.0473" 
+[1] "ENOR VaR: -0.0474" "ENOR ES: -0.0516" 
+[1] "EWA VaR: -0.0392" "EWA ES: -0.0452" 
+[1] "EWT VaR: -0.0394" "EWT ES: -0.0436" 
+[1] "EZA VaR: -0.0554" "EZA ES: -0.0634" 
+[1] "BWA VaR: -0.073" "BWA ES: -0.0817"
+[1] "LQSIF VaR: -0.1497" "LQSIF ES: -0.1931" 
+[1] "GWPH VaR: -0.1226" "GWPH ES: -0.1422" 
+[1] "AVAV VaR: -0.1077" "AVAV ES: -0.1484" 
+[1] "BYDDF VaR: -0.0766" "BYDDF ES: -0.088"  
+[1] "GELYF VaR: -0.0846" "GELYF ES: -0.0972" 
+[1] "EWQ VaR: -0.0341" "EWQ ES: -0.039"  
+[1] "FINX VaR: -0.069" "FINX ES: -0.0753"
+[1] "TCEHY VaR: -0.0684" "TCEHY ES: -0.0808" 
+[1] "APH VaR: -0.0624" "APH ES: -0.0698" 
+[1] "NVDA VaR: -0.1143" "NVDA ES: -0.1347" 
+[1] "EWG VaR: -0.0363" "EWG ES: -0.0407" 
+[1] "EWU VaR: -0.0238" "EWU ES: -0.0271" 
+[1] "EWL VaR: -0.0286" "EWL ES: -0.0327" 
+[1] "EIS VaR: -0.0432" "EIS ES: -0.0483" 
+[1] "ENZL VaR: -0.0333" "ENZL ES: -0.037"  
+[1] "EWH VaR: -0.0339" "EWH ES: -0.0368" 
+[1] "MAG VaR: -0.0779" "MAG ES: -0.0897" 
+[1] "ITHUF VaR: -0.1214" "ITHUF ES: -0.145"  
+[1] "LULU VaR: -0.0815" "LULU ES: -0.1027" 
+[1] "ITEQ VaR: -0.0516" "ITEQ ES: -0.0559" 
+[1] "BOTZ VaR: -0.0601" "BOTZ ES: -0.0665" 
+[1] "BJK VaR: -0.0592" "BJK ES: -0.0645" 
+[1] "EWJ VaR: -0.0373" "EWJ ES: -0.0442" 
+[1] "SHOP VaR: -0.1211" "SHOP ES: -0.1435" 
+[1] "PAOTF VaR: -0.1874" "PAOTF ES: -0.2276" 
+[1] "TTWO VaR: -0.0797" "TTWO ES: -0.1013" 
+[1] "EWK VaR: -0.0343" "EWK ES: -0.0383" 
+[1] "EWK VaR: -0.0518" "EWK ES: -0.0551" 
+NULL
+NULL
+Warning message:
+In dp$risk$Beta1Y * (coredata(tail(logR[, "ACWI"], 1)) - coredata(tail(rf,  :
+  Recycling array of length 1 in vector-array arithmetic is deprecated.
+  Use c() or as.vector() instead.
+
+NULL
+NULL
+[1] "########### 5. Save output"
+Error in system(paste(which, shQuote(names[i])), intern = TRUE, ignore.stderr = TRUE) : 
+  cannot popen '/usr/bin/which 'pandoc' 2>/dev/null', probable reason 'Cannot allocate memory'
+Calls: <Anonymous> ... pandoc_available -> find_pandoc -> find_program -> Sys.which
 Execution halted
+Warning message:
+system call failed: Cannot allocate memory 
+NULL
+NULL
+[1] "########### 5. Save output"
+
+
+processing file: dash_performance.Rmd
+  |                                                                         |                                                                 |   0%  |                                                                         |......                                                           |   9%
+   inline R code fragments
+
+  |                                                                         |............                                                     |  18%
+label: unnamed-chunk-1 (with options) 
+List of 2
+ $ echo   : symbol T
+ $ results: chr "hide"
+
+  |                                                                         |..................                                               |  27%
+  ordinary text without R code
+
+  |                                                                         |........................                                         |  36%
+label: unnamed-chunk-2 (with options) 
+List of 2
+ $ include: logi TRUE
+ $ echo   : logi FALSE
+
+  |                                                                         |..............................                                   |  45%
+  ordinary text without R code
+
+  |                                                                         |...................................                              |  55%
+label: unnamed-chunk-3 (with options) 
+List of 2
+ $ include: logi TRUE
+ $ echo   : logi FALSE
+
+  |                                                                         |.........................................                        |  64%
+  ordinary text without R code
+
+  |                                                                         |...............................................                  |  73%
+label: unnamed-chunk-4 (with options) 
+List of 3
+ $ include  : logi TRUE
+ $ echo     : logi FALSE
+ $ fig.align: chr "center"
+
+  |                                                                         |.....................................................            |  82%
+  ordinary text without R code
+
+  |                                                                         |...........................................................      |  91%
+label: unnamed-chunk-5 (with options) 
+List of 3
+ $ include  : logi TRUE
+ $ echo     : logi FALSE
+ $ fig.align: chr "center"
+
+  |                                                                         |.................................................................| 100%
+  ordinary text without R code
+
+
+output file: dash_performance.knit.md
+
+/usr/lib/rstudio-server/bin/pandoc/pandoc +RTS -K512m -RTS dash_performance.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash --output portfolio_performance.html --smart --email-obfuscation none --self-contained --standalone --section-divs --template /usr/local/lib/R/site-library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --variable 'theme:bootstrap' --include-in-header /tmp/RtmpUGwrbE/rmarkdown-str56b1121f7b7c.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --include-before-body header.html --include-after-body footer.html 
+
+Output created: portfolio_performance.html
+Warning message:
+In in_dir(input_dir(), evaluate(code, envir = env, new_device = FALSE,  :
+  You changed the working directory to /home/rstudio/portfolio (probably via setwd()). It will be restored to /home/rstudio/portfolio/Dashboard. See the Note section in ?knitr::knit
+
+
+processing file: dash_risk.Rmd
+  |                                                                         |                                                                 |   0%  |                                                                         |.....                                                            |   8%
+   inline R code fragments
+
+  |                                                                         |..........                                                       |  15%
+label: unnamed-chunk-1 (with options) 
+List of 2
+ $ echo   : symbol T
+ $ results: chr "hide"
+
+  |                                                                         |...............                                                  |  23%
+  ordinary text without R code
+
+  |                                                                         |....................                                             |  31%
+label: unnamed-chunk-2 (with options) 
+List of 3
+ $ include  : logi TRUE
+ $ echo     : logi FALSE
+ $ fig.align: chr "center"
+
+  |                                                                         |.........................                                        |  38%
+  ordinary text without R code
+
+  |                                                                         |..............................                                   |  46%
+label: unnamed-chunk-3 (with options) 
+List of 3
+ $ include  : logi TRUE
+ $ echo     : logi FALSE
+ $ fig.align: chr "center"
+
+  |                                                                         |...................................                              |  54%
+  ordinary text without R code
+
+  |                                                                         |........................................                         |  62%
+label: unnamed-chunk-4 (with options) 
+List of 3
+ $ include  : logi TRUE
+ $ echo     : logi FALSE
+ $ fig.align: chr "center"
+
+  |                                                                         |.............................................                    |  69%
+  ordinary text without R code
+
+  |                                                                         |..................................................               |  77%
+label: unnamed-chunk-5 (with options) 
+List of 3
+ $ include  : logi TRUE
+ $ echo     : logi FALSE
+ $ fig.align: chr "center"
+
+  |                                                                         |.......................................................          |  85%
+  ordinary text without R code
+
+  |                                                                         |............................................................     |  92%
+label: unnamed-chunk-6 (with options) 
+List of 3
+ $ include  : logi TRUE
+ $ echo     : logi FALSE
+ $ fig.align: chr "center"
+
+  |                                                                         |.................................................................| 100%
+  ordinary text without R code
+
+
+output file: dash_risk.knit.md
+
+/usr/lib/rstudio-server/bin/pandoc/pandoc +RTS -K512m -RTS dash_risk.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash --output portfolio_risk.html --smart --email-obfuscation none --self-contained --standalone --section-divs --template /usr/local/lib/R/site-library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --variable 'theme:bootstrap' --include-in-header /tmp/RtmpUGwrbE/rmarkdown-str56b13ade27d7.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' --include-before-body header.html --include-after-body footer.html 
+
+Output created: portfolio_risk.html
+Warning message:
+In in_dir(input_dir(), evaluate(code, envir = env, new_device = FALSE,  :
+  You changed the working directory to /home/rstudio/portfolio (probably via setwd()). It will be restored to /home/rstudio/portfolio/Dashboard. See the Note section in ?knitr::knit
+[1] "########### 6. Send Dashboards by E-Mail"
+Loading required package: rvest
+Loading required package: xml2
+Loading required package: tableHTML
+Auto-refreshing stale OAuth token.
+[1] "########### 7. updated completed"
