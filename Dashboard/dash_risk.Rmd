@@ -18,8 +18,7 @@ load("Data/Portfolio_Market.RData")
 load("Data/portRisk.RData")
 ```
 
-  
-# Open Positions:
+<p style="text-align: center;">  Open Positions: </p>
 
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 dp$risk %>% subset(dp$risk$SharePortfolio>0.0001 | dp$risk$Name == 'Portfolio:'
@@ -87,7 +86,7 @@ formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'
 ##dp$risk %>% subset((dp$risk$SharePortfolio==0 | is.na(dp$risk$SharePortfolio))& dp$risk$Name != 'Portfolio:'
 ```
 
-# Overview:
+<p style="text-align: center;">  Overview: </p>
 
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 
@@ -153,15 +152,20 @@ formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'
   formatStyle('ind VaR MSGARCH', background = color_from_middle(risk.Table$`ind VaR MSGARCH`,'pink','pink'))
 ```
 
-# Vola Index:
+
+<p style="text-align: center;">Vola Index:</p>
+
 <center>
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate), 
-  x = portRisk[,c("VolaN1_MSGARCH","std_log_returns","std_log_returns_1Y")]),  main = '') %>%
+  x = portRisk[,c("VolaN1_MSGARCH","std_log_returns","std_log_returns_1Y")]),
+  main = '', width = 1800) %>%
   dyRangeSelector(height = 20)
 ```
 </center>
-# VaR Index:
+
+<p style="text-align: center;">VaR Index:</p>
+
 <center>
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate), 
@@ -172,7 +176,8 @@ dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate),
   dyRangeSelector(height = 20)
 ```
 </center>
-# ES Index:
+
+<p style="text-align: center;">ES Index:</p>
 <center>
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate), 
