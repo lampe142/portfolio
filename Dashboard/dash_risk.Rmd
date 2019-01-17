@@ -187,5 +187,23 @@ dygraphs::dygraph(xts(order.by = as.Date(portRisk$CloseDate),
                   "ES bootstrap")]),  main = '', width = 1800) %>%
   dyRangeSelector(height = 20)
 ```
+```{r include = TRUE, echo=FALSE, fig.align='center'}
+ts_a <-  xts::xts(x = cbind(-100 *portRisk$`ES bootstrap 95Quantile`,
+                            -100 *portRisk$`ES bootstrap`, 
+                            -100 *portRisk$`ES bootstrap 05Quantile`,
+                      100 * portRisk$VolaN1_MSGARCH), 
+                 order.by = as.Date(portRisk$CloseDate))
+names(ts_a) <-  c("lwr", "fit", "upr","vola MSGARCH")
+
+
+dygraphs::dygraph(ts_a, main = "Portfolio ES") %>%
+  dyAxis("x", drawGrid = FALSE) %>%
+  dyAxis("y", label='ES in %', drawGrid = FALSE) %>%
+  dySeries(c("lwr", "fit", "upr"), label = "ES 0.95") %>%
+  dyOptions(colors = RColorBrewer::brewer.pal(3, "Set1")) %>%
+  dySeries("vola MSGARCH", axis = 'y2') %>%
+  dyAxis("y2", label="vola MSGARCH", drawGrid = FALSE) %>%
+  dyRangeSelector(height = 20)
+```
 </center>
 
