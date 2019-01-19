@@ -144,6 +144,7 @@ dp$position %>% subset((dp$position$SharePortfolio>0.001 &
 ```
 
 <p style="text-align: center;"> # Cboe Volatility Index: </p>
+<center>
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 
 textMain <- paste0(as.character(end(dm$logRetPort)),' Daily log return: ' , round(tail(dm$logRetPort,1)*100,2),'% ',
@@ -161,3 +162,4 @@ dygraphs::dygraph(ts_a, main = textMain, width = 1800) %>%
   dySeries("VIX", axis = 'y2') %>%
   dyRangeSelector(height = 20)
 ```
+</center>
