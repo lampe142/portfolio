@@ -143,27 +143,23 @@ dp$position %>% subset((dp$position$SharePortfolio>0.001 &
   formatStyle('SharePortfolio', background = color_from_middle(t2$SharePortfolio,'lightblue','lightblue'))
 ```
 
-<p style="text-align: center;"> # Porfolio Performance Index: </p>
-
-<center>
-```{r include = TRUE, echo=FALSE, fig.align='center'}
-textMain <- paste0(as.character(end(dm$logRetPort)),' Daily log return: ' , round(tail(dm$logRetPort,1)*100,2),'% ',
-       'Monthly log return: ' , 
-       round(sum(dm$logRetPort[paste0(Sys.Date()-30,'/',Sys.Date())])*100,2),'%')
-close360d <- as.vector(window(dm$adjClosePort, start=Sys.Date()-364, end = Sys.Date())[1])
-
-dygraphs::dygraph(dm$adjClosePort[paste0(Sys.Date()-360,'/',Sys.Date())]/ close360d, 
-                  main =textMain, width = 1800)  %>%
-  dyRangeSelector(height = 20)
-```
-</center>
-
-
 <p style="text-align: center;"> # Cboe Volatility Index: </p>
 <center>
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
-dygraphs::dygraph(dp$vola$VIX[paste0(Sys.Date()-360,'/',Sys.Date())],  main = paste(unlist(strsplit(as.character(end(dp$vola$VIX))," ")),"VIX S&P 500 ",round(tail(dp$vola$VIX,1),4),"Pt. Change",round(diff(tail(dp$vola$VIX,2))[2],4))
-                  , width = 1800) %>%
+
+textMain <- paste0(as.character(end(dm$logRetPort)),' Daily log return: ' , round(tail(dm$logRetPort,1)*100,2),'% ',
+       'Monthly log return: ' , 
+       round(sum(dm$logRetPort[paste0(Sys.Date()-30,'/',Sys.Date())])*100,2),'% ',   unlist(strsplit(as.character(end(dp$vola$VIX))," ")),"VIX S&P 500 ",round(tail(dp$vola$VIX,1),4),"Pt. Change",round(diff(tail(dp$vola$VIX,2))[2],4))
+
+close360d <- as.vector(window(dm$adjClosePort, start=Sys.Date()-364, end = Sys.Date())[1])
+ts_a <- 
+xts::merge.xts(dm$adjClosePort[paste0(Sys.Date()-360,'/',Sys.Date())] /close360d, 
+               dp$vola$VIX[paste0(Sys.Date()-360,'/',Sys.Date())])
+names(ts_a) <- c("portfolio", "VIX")
+
+dygraphs::dygraph(ts_a, main = textMain, width = 1800) %>%
+  dySeries("portfolio") %>%
+  dySeries("VIX", axis = 'y2') %>%
   dyRangeSelector(height = 20)
 ```
 </center>

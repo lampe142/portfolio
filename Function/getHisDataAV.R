@@ -235,6 +235,8 @@ mergeCloseRet <- function(fx = dp$FX$USEURO, avAdjClose=dp$avAdjClose,
   avAdjCloseMer <- avAdjClose[[attributes(avAdjClose)$names[1]]]
   # merging close Prices
   for (iAss in attributes(avAdjClose)$names[sel]){
+    # print(iAss)
+    # print(tail(avAdjClose[[iAss]],1))
     avAdjCloseMer <- xts::merge.xts(avAdjCloseMer, avAdjClose[[iAss]], join='inner')
   }
   avAdjCloseMer <- avAdjCloseMer[,-1]
