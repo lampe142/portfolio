@@ -187,7 +187,7 @@ updatePositionRisk <- function(){
     dp$risk$CloseDate[iAssPos] <<- time(tail(avAdjCloseEA))
     dp$position$ClosePrice[iAssPos] <<- tail(avAdjCloseEA, n=1)
     avAdjlogRetEA <<- diff(log(avAdjCloseEA), lag=1)[-1]
-    dp$position$'CloseDate'[iAssPos] <<- unlist(strsplit(as.character(end(avAdjlogRetEA))," "))
+    dp$position$'CloseDate'[iAssPos] <<- unlist(strsplit(as.character(end(avAdjCloseEA))," "))
     lDate <<- index(tail(avAdjCloseEA, n=1))
   
     dp$position$'1D.logReturn'[iAssPos] <<- as.numeric(tail(avAdjCloseEA[paste((lDate-1),lDate,sep='/')],1))/
@@ -207,8 +207,6 @@ updatePositionRisk <- function(){
     dp$position$'250D.logReturn'[iAssPos] <<- 
       as.numeric(tail(avAdjCloseEA[paste((lDate-365),lDate,sep='/')],1))/
       as.numeric(head(avAdjCloseEA[paste((lDate-365),lDate,sep='/')],1)) -1
-    
-    dp$position$'CloseDate'[iAssPos] <<- lDate
   }
   dp$position$Value <<- dp$position$Volume * dp$position$ClosePrice
   dp$risk$Value <<- dp$position$Value
