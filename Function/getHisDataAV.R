@@ -187,13 +187,26 @@ updatePositionRisk <- function(){
     dp$risk$CloseDate[iAssPos] <<- time(tail(avAdjCloseEA))
     dp$position$ClosePrice[iAssPos] <<- tail(avAdjCloseEA, n=1)
     avAdjlogRetEA <<- diff(log(avAdjCloseEA), lag=1)[-1]
-    lDate <<- index(tail(avAdjlogRetEA, n=1))
-    dp$position$'1D.logReturn'[iAssPos] <<- avAdjlogRetEA[lDate]
-    dp$position$'5D.logReturn'[iAssPos] <<- sum(avAdjlogRetEA[paste((lDate-5),lDate,sep='/')], na.rm=T)
-    dp$position$'23D.logReturn'[iAssPos] <<- sum(avAdjlogRetEA[paste((lDate-30),lDate,sep='/')], na.rm=T)
-    dp$position$'125D.logReturn'[iAssPos] <<- sum(avAdjlogRetEA[paste((lDate-182),lDate,sep='/')], na.rm=T)
-    dp$position$'250D.logReturn'[iAssPos] <<- sum(avAdjlogRetEA[paste((lDate-365),lDate,sep='/')], na.rm=T)
-    dp$position$'CloseDate'[iAssPos] <<- unlist(strsplit(as.character(end(avAdjlogRetEA))," "))
+    dp$position$'CloseDate'[iAssPos] <<- unlist(strsplit(as.character(end(avAdjCloseEA))," "))
+    lDate <<- index(tail(avAdjCloseEA, n=1))
+  
+    dp$position$'1D.logReturn'[iAssPos] <<- as.numeric(tail(avAdjCloseEA[paste((lDate-1),lDate,sep='/')],1))/
+      as.numeric(head(avAdjCloseEA[paste((lDate-1),lDate,sep='/')],1)) -1
+    
+    dp$position$'5D.logReturn'[iAssPos] <<- as.numeric(tail(avAdjCloseEA[paste((lDate-5),lDate,sep='/')],1))/
+      as.numeric(head(avAdjCloseEA[paste((lDate-5),lDate,sep='/')],1)) -1
+    
+    dp$position$'23D.logReturn'[iAssPos] <<-
+    as.numeric(tail(avAdjCloseEA[paste((lDate-30),lDate,sep='/')],1))/
+      as.numeric(head(avAdjCloseEA[paste((lDate-30),lDate,sep='/')],1)) -1
+    
+    dp$position$'125D.logReturn'[iAssPos] <<- 
+      as.numeric(tail(avAdjCloseEA[paste((lDate-365/2),lDate,sep='/')],1))/
+      as.numeric(head(avAdjCloseEA[paste((lDate-365/2),lDate,sep='/')],1)) -1
+    
+    dp$position$'250D.logReturn'[iAssPos] <<- 
+      as.numeric(tail(avAdjCloseEA[paste((lDate-365),lDate,sep='/')],1))/
+      as.numeric(head(avAdjCloseEA[paste((lDate-365),lDate,sep='/')],1)) -1
   }
   dp$position$Value <<- dp$position$Volume * dp$position$ClosePrice
   dp$risk$Value <<- dp$position$Value

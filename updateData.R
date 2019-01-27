@@ -47,9 +47,7 @@ print(paste('Latest FX US EURO:',index(tail(dm$logRet,1))))
 filterMSGARCHLogRet(verbose = F)
 updateRisk(dm$logRet, rf=dp$FX$rf1y)
 getRisk(logR = dm$logRet)
-bootRisk(logR = dm$logRet, nBoot = 1000)
-print(paste('Port VaR:',tail(portRisk$CloseDate,1),tail(portRisk$VaR_bootstrap,1)))
-print(paste('full portfolio Risk overview',tail(dp$risk,1)))
+bootRisk(logR = dm$logRet, nBoot = 100)
 
 # tail(dm$logRet$EEM)
 print(paste('########### 5. Save output'))
@@ -58,6 +56,7 @@ save.image(paste0(here::here(),"/Backup/",Sys.Date()," Portfolio_Market.RData"))
 savePortRisk(verbose = F)
 load(paste0(here::here(),"/Data/portRisk.RData"))
 print(paste('Port VaR:',tail(portRisk$CloseDate,1),tail(portRisk$VaR_bootstrap,1)))
+# print(paste('full portfolio Risk overview',tail(dp$risk,1)))
 
 # Render Dashboards
 print(paste('########### 6. Render Dashboard'))

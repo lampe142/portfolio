@@ -40,7 +40,7 @@ bootRisk <- function(logR, nBoot=100){
     apply(individualVaR, 1, quantile, probs = c(0.95),  na.rm = TRUE)
   
   #save portfolio VaR
-  dp$risk$`VaR bootstrap`[port.index] <<- mean(VaR)
+  dp$risk$VaR_bootstrap[port.index] <<- mean(VaR)
   dp$risk$`VaR bootstrap 05Quantile`[port.index] <<- quantile(VaR, probs = 0.05,na.rm = T)
   dp$risk$`VaR bootstrap 95Quantile`[port.index] <<- quantile(VaR, probs = 0.95,na.rm = T)
   
