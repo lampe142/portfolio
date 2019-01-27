@@ -1,6 +1,7 @@
 
-setwd('/home/rstudio/portfolio_aws')
-source('send_email_profileRep.R')
+setwd(here::here())
+source('profileRep.R')
+#source('send_email_profileRep.R')
 
 US.all.States <- read.csv("Data/price_weed_states.csv", header = F)
 load(file="Data/can_price.Rda")
@@ -84,7 +85,7 @@ can.priceRound$price <- round(can.price$price,4)
 can.priceRound %>% subset(state %in% country$V1 & quality =='High Quality',
               #         (date=='Sys.Date()'| date=='Sys.Date()-1'), 
                      select=c('date','state','price')) %>%
-reshape::cast(date~state) %>% tableHTML -> msgTable
+reshape::cast(date~state) %>% tableHTML::tableHTML -> msgTable
 
   html_bod <- paste0("<p> cannabis prices succes scrapped from priceofweed.coml. </p>", msgTable)
   gmailr::mime() %>%
