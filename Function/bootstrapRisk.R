@@ -33,7 +33,7 @@ bootRisk <- function(logR, nBoot=100){
     apply(incVaR, 1, quantile, probs = c(0.95),  na.rm = TRUE)
   
   #save individual VaR
-  dp$risk$`VaR bootstrap`[hVaR.index] <<- rowMeans(individualVaR, na.rm = FALSE, dims = 1) 
+  dp$risk$VaR_bootstrap[hVaR.index] <<- rowMeans(individualVaR, na.rm = FALSE, dims = 1) 
   dp$risk$`VaR bootstrap 05Quantile`[hVaR.index] <<- 
     apply(individualVaR, 1, quantile, probs = c(0.05),  na.rm = TRUE)
   dp$risk$`VaR bootstrap 95Quantile`[hVaR.index] <<- 
@@ -53,8 +53,8 @@ bootRisk <- function(logR, nBoot=100){
   dp$risk$`ES bootstrap 05Quantile`[port.index] <<- quantile(ES,probs = c(0.05),na.rm=T)
   dp$risk$`ES bootstrap 95Quantile`[port.index] <<- quantile(ES,probs = c(0.95),na.rm=T)
   dp$risk$`component VaR` <<- dp$risk$`mVaR bootstrap` * dp$risk$SharePortfolio *100
-  dp$risk$`VaR Share` <<- dp$risk$`mVaR bootstrap` * dp$risk$SharePortfolio / dp$risk$`VaR bootstrap`[port.index]
-  # dp$risk$`VaR bootstrap`[port.index]
+  dp$risk$`VaR Share` <<- dp$risk$`mVaR bootstrap` * dp$risk$SharePortfolio / dp$risk$VaR_bootstrap[port.index]
+  # dp$risk$`VaR_bootstrap`[port.index]
   # sum(dp$risk$`component VaR`,na.rm=T)
   
   return()
