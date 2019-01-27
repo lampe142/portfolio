@@ -18,6 +18,8 @@ require(readxl)
 require(alfred)
 require(httr)
 require(ecb)
+require(tableHTML)
+require(reshape)
 
 ################################################################################
 # source code
