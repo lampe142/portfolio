@@ -70,6 +70,7 @@ print(paste('########### 7. Send Dashboards by E-Mail'))
 source('E-Mail/send_portfolio_email.R')
 
 print(paste('########### 8. Run web scrapping'))
+source('Dashboard/canUSplot.R')
 source('Webscrap/web_scrap_price_weed.R')
 
 print(paste('########### 9. updated completed'))
