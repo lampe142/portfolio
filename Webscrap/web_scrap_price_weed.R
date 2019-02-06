@@ -82,15 +82,42 @@ load(file="Data/can_price.Rda")
 Sys.Date()-1
 can.priceRound <-  can.price
 can.priceRound$price <- round(can.price$price,4)
-can.priceRound %>% subset(state %in% country$V1 & quality =='High Quality',
+
+# can.priceRound <- can.priceRound[!can.priceRound$date=='2019-01-28',]
+
+can.priceRound[!duplicated(can.priceRound[,c(-4,-5)]),] %>%
+subset(state %in% country$V1 & quality =='High Quality',
               #         (date=='Sys.Date()'| date=='Sys.Date()-1'), 
                      select=c('date','state','price')) %>%
-reshape::cast(date~state) %>% tableHTML::tableHTML -> msgTable
+reshape::cast(date~state) -> priceCanT
 
-  html_bod <- paste0("<p> cannabis prices succes scrapped from priceofweed.coml. </p>", msgTable)
+priceCanT %>% tableHTML::tableHTML(caption ='price of weed') -> priceWeedBP
+
+xts(order.by = priceCanT$date, x = priceCanT[,-1]) -> priceCanTimeS
+names(priceCanTimeS) <- names(priceCanT)[-1]
+
+sapply(2:7, function(x) quantmod::Delt(x1=priceCanT[,x], type = 'log', k=1))[-1,] %>%
+xts(order.by = priceCanT$date[-1]) -> lgCannaTimes
+colnames(lgCannaTimes) <-  names(priceCanT[-1])
+
+round(lgCannaTimes*10000,2) %>% tableHTML::tableHTML(theme = "scientific", 
+caption ='daily log return of cannabis price in pb') -> pcPriceWeedBP
+
+
+dygraphs::dygraph(priceCanTimeS, main = "", width = 1800) %>%
+  dyAxis("x", drawGrid = FALSE) %>%
+  dyRangeSelector(height = 20) -> priceCanTimeSPlot
+
+
+  html_bod <- paste0("<p> cannabis prices succes scrapped from priceofweed.coml. </p>", priceWeedBP,
+                     "<p> cannabis prices succes scrapped from priceofweed.coml. </p>", pcPriceWeedBP)
   gmailr::mime() %>%
     gmailr::to("maxlampe@posteo.de") %>%
     gmailr::from("lampe142@googlemail.com")%>%
     gmailr::subject(paste('Cannabis price', Sys.Date()))%>%
-    gmailr::html_body(msgTable)%>%
+    gmailr::html_body(html_bod)%>%
     gmailr::send_message()
+
+  
+  
+  

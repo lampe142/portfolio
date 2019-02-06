@@ -22,7 +22,7 @@ load("Data/portRisk.RData")
 
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 dp$risk %>% subset(dp$risk$SharePortfolio>0.0001 | dp$risk$Name == 'Portfolio:'
-                   ,select=names(dp$risk)[c(2:18,28,37,40,42,44)]) %>%
+                   ,select=names(dp$risk)[c(2:18,27,28,37,40,42,43)]) %>%
   mutate(std_log_returns = std_log_returns * 100) %>% 
   mutate(std_log_returns_1Y = std_log_returns_1Y * 100) %>%
   mutate(VolaN1_MSGARCH = VolaN1_MSGARCH * 100) %>%
@@ -76,8 +76,8 @@ datatable(risk.Table,
   formatStyle('ES MSGARCH', background = color_from_middle(risk.Table$`ES MSGARCH`,'pink','pink')) %>%
     formatPercentage('ES bootstrap', 1) %>%
   formatStyle('ES bootstrap', background = color_from_middle(risk.Table$`ES bootstrap`,'pink','pink')) %>%
-  formatPercentage('VaR bootstrap', 1) %>%
-  formatStyle('VaR bootstrap', background = color_from_middle(risk.Table$`VaR bootstrap`,'pink','pink')) %>%
+  formatPercentage('VaR_bootstrap', 1) %>%
+  formatStyle('VaR_bootstrap', background = color_from_middle(risk.Table$`VaR_bootstrap`,'pink','pink')) %>%
 formatPercentage('VaR Share', 1) %>%
 formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'pink','pink')) %>%
     formatPercentage('ind VaR MSGARCH', 1) %>%
@@ -91,7 +91,7 @@ formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 
 dp$risk %>% subset(!(dp$risk$SharePortfolio>0.0001) | dp$risk$Name == 'Portfolio:'
-                   ,select=names(dp$risk)[c(2:18,28,37,40,42,44)]) %>%
+                   ,select=names(dp$risk)[c(2:18,27,28,37,40,42,43)]) %>%
   mutate(std_log_returns = std_log_returns * 100) %>% 
   mutate(std_log_returns_1Y = std_log_returns_1Y * 100) %>%
   mutate(VolaN1_MSGARCH = VolaN1_MSGARCH * 100) %>%
@@ -144,8 +144,8 @@ datatable(risk.Table,extensions = 'Buttons',
   formatStyle('ES MSGARCH', background = color_from_middle(risk.Table$`ES MSGARCH`,'pink','pink')) %>%
     formatPercentage('ES bootstrap', 1) %>%
   formatStyle('ES bootstrap', background = color_from_middle(risk.Table$`ES bootstrap`,'pink','pink')) %>%
-  formatPercentage('VaR bootstrap', 1) %>%
-  formatStyle('VaR bootstrap', background = color_from_middle(risk.Table$`VaR bootstrap`,'pink','pink')) %>%
+  formatPercentage('VaR_bootstrap', 1) %>%
+  formatStyle('VaR_bootstrap', background = color_from_middle(risk.Table$VaR_bootstrap,'pink','pink')) %>%
 formatPercentage('VaR Share', 1) %>%
 formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'pink','pink')) %>%
     formatPercentage('ind VaR MSGARCH', 1) %>%
@@ -160,9 +160,9 @@ formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'
 ts_a2 <-  xts::xts(x = cbind(-100 *portRisk$`VaR bootstrap 95Quantile`,
                             -100 *portRisk$VaR_bootstrap, 
                             -100 *portRisk$`VaR bootstrap 05Quantile`,
-                            100 * portRisk$MSGARCH_prob), 
+                            100 * portRisk$VolaN1_MSGARCH), 
                   order.by = as.Date(portRisk$CloseDate))
-names(ts_a2) <-  c("lwr", "fit", "upr","MSGARCH prob")
+names(ts_a2) <-  c("lwr", "fit", "upr","VolaN1_MSGARCH")
 
 
 dygraphs::dygraph(ts_a2, main = "Portfolio VaR", width = 1800) %>%
@@ -170,8 +170,8 @@ dygraphs::dygraph(ts_a2, main = "Portfolio VaR", width = 1800) %>%
   dyAxis("y", label='VaR in %', drawGrid = FALSE) %>%
   dySeries(c("lwr", "fit", "upr"), label = "VaR 0.95") %>%
   dyOptions(colors = RColorBrewer::brewer.pal(3, "Set1")) %>%
-  dySeries("MSGARCH prob", axis = 'y2') %>%
-  dyAxis("y2", label="MSGARCH prob", drawGrid = FALSE) %>%
+  dySeries("VolaN1_MSGARCH", axis = 'y2') %>%
+  dyAxis("y2", label="VolaN1_MSGARCH", drawGrid = FALSE) %>%
   dyRangeSelector(height = 20)
 ```
 </center>
@@ -181,9 +181,9 @@ dygraphs::dygraph(ts_a2, main = "Portfolio VaR", width = 1800) %>%
 ts_a <-  xts::xts(x = cbind(-100 *portRisk$`ES bootstrap 95Quantile`,
                             -100 *portRisk$`ES bootstrap`, 
                             -100 *portRisk$`ES bootstrap 05Quantile`,
-                      100 * portRisk$MSGARCH_prob), 
+                      100 * portRisk$VolaN1_MSGARCH), 
                  order.by = as.Date(portRisk$CloseDate))
-names(ts_a) <-  c("lwr", "fit", "upr","MSGARCH prob")
+names(ts_a) <-  c("lwr", "fit", "upr","VolaN1_MSGARCH")
 
 
 dygraphs::dygraph(ts_a, main = "Portfolio ES", width = 1800) %>%
@@ -191,8 +191,8 @@ dygraphs::dygraph(ts_a, main = "Portfolio ES", width = 1800) %>%
   dyAxis("y", label='ES in %', drawGrid = FALSE) %>%
   dySeries(c("lwr", "fit", "upr"), label = "ES 0.95") %>%
   dyOptions(colors = RColorBrewer::brewer.pal(3, "Set1")) %>%
-  dySeries("MSGARCH prob", axis = 'y2') %>%
-  dyAxis("y2", label="MSGARCH prob", drawGrid = FALSE) %>%
+  dySeries("VolaN1_MSGARCH", axis = 'y2') %>%
+  dyAxis("y2", label="VolaN1_MSGARCH", drawGrid = FALSE) %>%
   dyRangeSelector(height = 20)
 ```
 </center>
