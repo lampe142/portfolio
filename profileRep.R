@@ -20,6 +20,7 @@ require(httr)
 require(ecb)
 require(tableHTML)
 require(reshape)
+require(tidyverse)
 
 ################################################################################
 # source code
