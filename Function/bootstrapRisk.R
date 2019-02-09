@@ -45,7 +45,7 @@ bootRisk <- function(logR, nBoot=100){
   dp$risk$`VaR bootstrap 95Quantile`[port.index] <<- quantile(VaR, probs = 0.95,na.rm = T)
   
   # save individual ES
-  dp$risk$`ES bootstrap`[hVaR.index] <<- rowMeans(individualES, na.rm = FALSE, dims = 1)
+  dp$risk$`ES bootstrap`[hVaR.index] <<- rowMeans(individualES, na.rm = TRUE, dims = 1)
   dp$risk$`ES bootstrap 05Quantile`[hVaR.index] <<- apply(individualES, 1, quantile, probs = c(0.05),  na.rm = TRUE)
   dp$risk$`ES bootstrap 95Quantile`[hVaR.index] <<- apply(individualES, 1, quantile, probs = c(0.95),  na.rm = TRUE)
   # save portfolio ES

@@ -41,7 +41,7 @@ print(paste('########### 4. Run Risk and Performance Analysis'))
 # load("~/portfolio/Data/Portfolio_Market.RData")
 updatePositionRisk()
 mergeCloseRet()
-print(paste('Latest FX US EURO:',index(tail(dm$logRet,1))))
+print(paste('Latest merged return:',index(tail(dm$logRet,1))))
 
 # Analysis
 filterMSGARCHLogRet(verbose = F)
@@ -61,17 +61,17 @@ print(paste('Port VaR:',tail(portRisk$CloseDate,1),tail(portRisk$VaR_bootstrap,1
 # Render Dashboards
 print(paste('########### 6. Render Dashboard'))
 Sys.setenv(RSTUDIO_PANDOC="/usr/lib/rstudio-server/bin/pandoc")
-rmarkdown::render("Dashboard/dash_performance.Rmd",output_file="portfolio_performance.html")
-# browseURL("Dashboard/portfolio_performance.html")
-rmarkdown::render("Dashboard/dash_risk.Rmd",output_file="portfolio_risk.html")
-# browseURL("Dashboard/portfolio_risk.html")
+rmarkdown::render("Dashboard/dash_performance.Rmd",output_file="../DashboardOutput/portfolio_performance.html")
+# browseURL("DashboardOutput/portfolio_performance.html")
+rmarkdown::render("Dashboard/dash_risk.Rmd",output_file="../DashboardOutput/portfolio_risk.html")
+# browseURL("DashboardOutput/portfolio_risk.html")
 
 print(paste('########### 7. Send Dashboards by E-Mail'))
 source('E-Mail/send_portfolio_email.R')
 
 print(paste('########### 8. Run web scrapping'))
-source('Dashboard/canUSplot.R')
 source('Webscrap/web_scrap_price_weed.R')
+source('Dashboard/canUSplot.R')
 
 print(paste('########### 9. updated completed'))
 .rs.restartR()

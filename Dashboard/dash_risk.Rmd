@@ -81,7 +81,9 @@ datatable(risk.Table,
 formatPercentage('VaR Share', 1) %>%
 formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'pink','pink')) %>%
     formatPercentage('ind VaR MSGARCH', 1) %>%
-  formatStyle('ind VaR MSGARCH', background = color_from_middle(risk.Table$`ind VaR MSGARCH`,'pink','pink'))
+  formatStyle('ind VaR MSGARCH', background = color_from_middle(risk.Table$`ind VaR MSGARCH`,'pink','pink'))%>%
+    formatPercentage('component VaR', 1) %>%
+  formatStyle('component VaR', background = color_from_middle(risk.Table$`component VaR`,'pink','pink'))
 
 ##dp$risk %>% subset((dp$risk$SharePortfolio==0 | is.na(dp$risk$SharePortfolio))& dp$risk$Name != 'Portfolio:'
 ```

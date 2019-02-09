@@ -2,9 +2,10 @@
 .Rhistory
 .RData
 .Ruserdata
-.html
-.log
+*.html
+*.png
+*.log
 Dashboard/.html
 Dashboard/portfolio_risk.html
 Dashboard/portfolio_performance.html
-logs/
+**/
