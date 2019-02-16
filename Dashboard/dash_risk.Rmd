@@ -154,8 +154,6 @@ formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'
   formatStyle('ind VaR MSGARCH', background = color_from_middle(risk.Table$`ind VaR MSGARCH`,'pink','pink'))
 ```
 
-<p style="text-align: center;">VaR Index:</p>
-
 <center>
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 
@@ -166,8 +164,10 @@ ts_a2 <-  xts::xts(x = cbind(-100 *portRisk$`VaR bootstrap 95Quantile`,
                   order.by = as.Date(portRisk$CloseDate))
 names(ts_a2) <-  c("lwr", "fit", "upr","VolaN1_MSGARCH")
 
+VaREuro <- dp$position$Value[dp$position$AlphaVantage=='Port']*tail(ts_a2$fit,1)/100
+titleVaR <- paste0("Portfolio VaR ",round(tail(ts_a2$fit,1),2), '% - ',round(VaREuro,2),'€')
 
-dygraphs::dygraph(ts_a2, main = "Portfolio VaR", width = 1800) %>%
+dygraphs::dygraph(ts_a2, main = titleVaR, width = 1800) %>%
   dyAxis("x", drawGrid = FALSE) %>%
   dyAxis("y", label='VaR in %', drawGrid = FALSE) %>%
   dySeries(c("lwr", "fit", "upr"), label = "VaR 0.95") %>%
@@ -177,7 +177,6 @@ dygraphs::dygraph(ts_a2, main = "Portfolio VaR", width = 1800) %>%
   dyRangeSelector(height = 20)
 ```
 </center>
-<p style="text-align: center;">ES Index:</p>
 <center>
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 ts_a <-  xts::xts(x = cbind(-100 *portRisk$`ES bootstrap 95Quantile`,
@@ -187,8 +186,9 @@ ts_a <-  xts::xts(x = cbind(-100 *portRisk$`ES bootstrap 95Quantile`,
                  order.by = as.Date(portRisk$CloseDate))
 names(ts_a) <-  c("lwr", "fit", "upr","VolaN1_MSGARCH")
 
-
-dygraphs::dygraph(ts_a, main = "Portfolio ES", width = 1800) %>%
+ESEuro <- dp$position$Value[dp$position$AlphaVantage=='Port']*tail(ts_a$fit,1)/100
+titleES <- paste0("Portfolio ES ",round(tail(ts_a$fit,1),2), '% - ',round(ESEuro,2),'€')
+dygraphs::dygraph(ts_a, main = titleES, width = 1800) %>%
   dyAxis("x", drawGrid = FALSE) %>%
   dyAxis("y", label='ES in %', drawGrid = FALSE) %>%
   dySeries(c("lwr", "fit", "upr"), label = "ES 0.95") %>%
