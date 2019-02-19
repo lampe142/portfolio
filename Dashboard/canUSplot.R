@@ -1,5 +1,6 @@
 # creating the plots
 load(file="Data/can_price.Rda")
+library(usmap)
 
 can.price$state <- gsub("-", " ", can.price$state)
 can.price %>% subset(date=='2018-11-20' & quality == 'High Quality', select=c("state","price"))%>%

@@ -19,8 +19,8 @@ print(paste('########### 2. Read Input'))
 fileName = 'PositionInfo/full_Port.xlsx'
 dp <<- list()
 dm <<- list()
-dp$position <- readxl::read_excel(path=fileName, sheet='Position')
-dp$risk <- readxl::read_excel(path=fileName, sheet='Risk') #[,1:6]
+dp$position <- readxl::read_excel(path=fileName, sheet='Position')[-21,]
+dp$risk <- readxl::read_excel(path=fileName, sheet='Risk')[-21,]
 row.names(dp$risk) <- dp$risk$AlphaVantage
 row.names(dp$position) <- dp$risk$AlphaVantage
 

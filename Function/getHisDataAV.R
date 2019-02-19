@@ -250,9 +250,12 @@ mergeCloseRet <- function(fx = dp$FX$USEURO, avAdjClose=dp$avAdjClose,
   for (iAss in attributes(avAdjClose)$names[sel]){
   #   print(iAss)
   #   print(tail(avAdjClose[[iAss]],1))
-    avAdjCloseMer <- xts::merge.xts(avAdjCloseMer, avAdjClose[[iAss]], join='inner')
+    avAdjCloseMer <- xts::merge.xts(avAdjCloseMer, avAdjClose[[iAss]], join='outer')
   }
   avAdjCloseMer <- avAdjCloseMer[,-1]
+  avAdjCloseMer <-  xts::last(avAdjCloseMer, n=250*3)
+  avAdjCloseMer <- xts(missForest::missForest(data.matrix(as.data.frame(avAdjCloseMer)))$ximp, order.by = index(avAdjCloseMer))
+
   colnames(avAdjCloseMer) <- attributes(avAdjClose)$names[sel]
   # adjusting for FX
   avAdjCloseMerFX = lapply(avAdjCloseMer, FUN = function(x) x/fx) 
