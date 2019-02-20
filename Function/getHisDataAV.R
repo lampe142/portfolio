@@ -91,7 +91,7 @@ getAllData <- function(pauseTime=20, FXsource='ECB'){
   return()
 }
 
-getHisDataAV <- function(symbolI='GWPH', verbose=F, os='compact'){
+getHisDataAV <- function(symbolI='EEM', verbose=F, os='compact'){
   url2 <- paste('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=',symbolI,
                 '&apikey=QYRKHZUIGJT4NB0A&outputsize=',os,sep = '')
   x <- unlist(strsplit(rawToChar(httr::GET(url2)$content), ","))
@@ -103,7 +103,7 @@ getHisDataAV <- function(symbolI='GWPH', verbose=F, os='compact'){
   closeAdj <- as.numeric(as.character(x4[seq(from=5, to=nrow(x4), by=8),2]))
   ts <- xts::xts(x=closeAdj, order.by = dates)
   
-  if(verbose){ head(ts) }
+  if(verbose){ tail(ts) }
   return(ts)
 }
 
