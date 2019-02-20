@@ -2,6 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+.httr-oauth
+token.rds
 *.html
 *.png
 *.log
