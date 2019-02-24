@@ -22,6 +22,7 @@ require(tableHTML)
 require(reshape)
 require(tidyverse)
 require(missForest)
+require(maps)
 
 ################################################################################
 # source code

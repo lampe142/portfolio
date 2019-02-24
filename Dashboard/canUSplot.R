@@ -1,10 +1,10 @@
 # creating the plots
 load(file="Data/can_price.Rda")
 library(usmap)
-
+library(USAboundaries)
 can.price$state <- gsub("-", " ", can.price$state)
 can.price %>% subset(date=='2018-11-20' & quality == 'High Quality', select=c("state","price"))%>%
-merge(y = state_codes,by.x='state',  by.y = "state_name", all.x = TRUE,no.dups = TRUE) %>%
+merge(y = state_codes, by.x='state',  by.y = "state_name", all.x = TRUE,no.dups = TRUE) %>%
 subset(!is.na(state_abbr),select=c("state_abbr","price")) -> us.can.price.high
 names(us.can.price.high) <- c("state",'price')
 
