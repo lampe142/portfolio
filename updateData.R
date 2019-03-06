@@ -56,9 +56,9 @@ save.image(paste0(here::here(),"/Data/Portfolio_Market.RData"))
 ## upload backup to dropbox
 print(paste('########### 5.1 Save output to dropbox'))
 save.image(paste0(here::here(),"/Backup/",Sys.Date()," Portfolio_Market.RData"))
-rdrop2::drop_upload(paste0(here::here(),"/Backup/",Sys.Date()," Portfolio_Market.RData"), 
-                    path = "PortfolioData",file = "token.rds")
-file.remove(paste0(here::here(),"/Backup/",Sys.Date()," Portfolio_Market.RData"))
+# rdrop2::drop_upload(paste0(here::here(),"/Backup/",Sys.Date()," Portfolio_Market.RData"), 
+#                    path = "PortfolioData",file = "token.rds")
+# file.remove(paste0(here::here(),"/Backup/",Sys.Date()," Portfolio_Market.RData"))
 
 savePortRisk(verbose = F)
 load(paste0(here::here(),"/Data/portRisk.RData"))
@@ -77,7 +77,8 @@ source('E-Mail/send_portfolio_email.R')
 
 print(paste('########### 8. Run web scrapping'))
 source('Webscrap/web_scrap_price_weed.R')
-source('Dashboard/canUSplot.R')
+# source('Dashboard/canUSplot.R')
+source('Dashboard/can.Price.US.R')
 
 print(paste('########### 9. updated completed'))
 .rs.restartR()

@@ -32,17 +32,28 @@ updateRisk <- function(logR, rf, nBoot=100){
   dp$risk['Port', "std_log_returns"]  <<- sd(dm$logRetPort)
   dp$risk['Port', "std_log_returns_1Y"] <<- sd(dm$logRetPort[paste(lY,tD,sep='/')])
   
-  
-  dp$risk$'250D.CAPM.Return' <<- as.vector(coredata(tail(rf,1))) + dp$risk$Beta1Y*
-    as.vector((base::mean(logR[paste(lY,tD,sep='/'),"ACWI"])*
-                 length(logR[paste(lY,tD,sep='/'),"ACWI"])
-               -coredata(tail(rf,1))))
-  
-  dp$position$'CAPM.Return' <<- as.vector(coredata(tail(rf,1))) + dp$risk$Beta1Y*
+  dp$position$'CAPM.Return.D1' <<- as.vector(coredata(tail(rf,1))) + dp$risk$Beta1Y*
     (coredata(tail(logR[,"ACWI"],1)) -coredata(tail(rf,1)))
+  
+  rmD250 <- as.vector(dm$adjClose[tD,"ACWI"])/ as.vector(dm$adjClose[lY,"ACWI"])-1
+  dp$risk$'250D.CAPM.Return' <<- as.vector(coredata(tail(rf,1))) + dp$risk$Beta1Y*
+    as.vector(( rmD250 * length(logR[paste(lY,tD,sep='/'),"ACWI"])
+               -coredata(tail(rf,1))))
+
+  date <- lubridate::ymd(index(tail(logR[,"ACWI"],1))) - lubridate::days(5)
+  rmD5 <- as.vector(dm$adjClose[tD,"ACWI"]) / as.vector(dm$adjClose[date,"ACWI"])-1
+  dp$risk$'CAPM.Return.D5' <<- as.vector(coredata(tail(rf,1))) + dp$risk$Beta1Y *
+    as.vector(( rmD5 * length(logR[paste(lY,tD,sep='/'),"ACWI"]) - coredata(tail(rf,1))))
+    
+  date <- lubridate::ymd(index(tail(logR[,"ACWI"],1))) - lubridate::days(30)
+  rmD23 <- as.vector(dm$adjClose[tD,"ACWI"])/ as.vector(dm$adjClose[date,"ACWI"])-1
+  dp$risk$'CAPM.Return.D23' <<- as.vector(coredata(tail(rf,1))) + dp$risk$Beta1Y*
+    as.vector(( rmD23 * length(logR[paste(lY,tD,sep='/'),"ACWI"])
+                -coredata(tail(rf,1))))
+  
   
   dp$position['Port','CAPM.Return'] <<- as.vector(coredata(tail(rf,1))) + dp$risk['Port','Beta1Y'] *
-    (coredata(tail(logR[,"ACWI"],1)) -coredata(tail(rf,1)))
+    (coredata(tail(logR[,"ACWI"],1)) - coredata(tail(rf,1)))
   
   
   dp$risk$SharePortfolio <<- dp$position$SharePortfolio

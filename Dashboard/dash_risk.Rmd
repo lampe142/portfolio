@@ -17,12 +17,55 @@ suppressMessages(source('profileRep.R'))
 load("Data/Portfolio_Market.RData")
 load("Data/portRisk.RData")
 ```
+<center>
+```{r include = TRUE, echo=FALSE, fig.align='center'}
+
+ts_a2 <-  xts::xts(x = cbind(-100 *portRisk$`VaR bootstrap 95Quantile`,
+                            -100 *portRisk$VaR_bootstrap, 
+                            -100 *portRisk$`VaR bootstrap 05Quantile`,
+                            100 * portRisk$VolaN1_MSGARCH), 
+                  order.by = as.Date(portRisk$CloseDate))
+names(ts_a2) <-  c("lwr", "fit", "upr","VolaN1_MSGARCH")
+
+VaREuro <- dp$position$Value[dp$position$AlphaVantage=='Port']*tail(ts_a2$fit,1)/100
+titleVaR <- paste0("Portfolio VaR ",round(tail(ts_a2$fit,1),2), '% - ',round(VaREuro,2),'€')
+
+dygraphs::dygraph(ts_a2, main = titleVaR, width = 1800) %>%
+  dyAxis("x", drawGrid = FALSE) %>%
+  dyAxis("y", label='VaR in %', drawGrid = FALSE) %>%
+  dySeries(c("lwr", "fit", "upr"), label = "VaR 0.95") %>%
+  dyOptions(colors = RColorBrewer::brewer.pal(3, "Set1")) %>%
+  dySeries("VolaN1_MSGARCH", axis = 'y2') %>%
+  dyAxis("y2", label="VolaN1_MSGARCH", drawGrid = FALSE) %>%
+  dyRangeSelector(height = 20)
+```
+
+```{r include = TRUE, echo=FALSE, fig.align='center'}
+ts_a <-  xts::xts(x = cbind(-100 *portRisk$`ES bootstrap 95Quantile`,
+                            -100 *portRisk$`ES bootstrap`, 
+                            -100 *portRisk$`ES bootstrap 05Quantile`,
+                      100 * portRisk$VolaN1_MSGARCH), 
+                 order.by = as.Date(portRisk$CloseDate))
+names(ts_a) <-  c("lwr", "fit", "upr","VolaN1_MSGARCH")
+
+ESEuro <- dp$position$Value[dp$position$AlphaVantage=='Port']*tail(ts_a$fit,1)/100
+titleES <- paste0("Portfolio ES ",round(tail(ts_a$fit,1),2), '% - ',round(ESEuro,2),'€')
+dygraphs::dygraph(ts_a, main = titleES, width = 1800) %>%
+  dyAxis("x", drawGrid = FALSE) %>%
+  dyAxis("y", label='ES in %', drawGrid = FALSE) %>%
+  dySeries(c("lwr", "fit", "upr"), label = "ES 0.95") %>%
+  dyOptions(colors = RColorBrewer::brewer.pal(3, "Set1")) %>%
+  dySeries("VolaN1_MSGARCH", axis = 'y2') %>%
+  dyAxis("y2", label="VolaN1_MSGARCH", drawGrid = FALSE) %>%
+  dyRangeSelector(height = 20)
+```
+</center>
 
 <p style="text-align: center;">  Open Positions: </p>
 
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 dp$risk %>% subset(dp$risk$SharePortfolio>0.0001 | dp$risk$Name == 'Portfolio:'
-                   ,select=names(dp$risk)[c(2:18,27,28,37,40,42,43)]) %>%
+                   ,select=names(dp$risk)[c(2:18,27,28,37,40,42,43,44,45)]) %>%
   mutate(std_log_returns = std_log_returns * 100) %>% 
   mutate(std_log_returns_1Y = std_log_returns_1Y * 100) %>%
   mutate(VolaN1_MSGARCH = VolaN1_MSGARCH * 100) %>%
@@ -93,7 +136,7 @@ formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 
 dp$risk %>% subset(!(dp$risk$SharePortfolio>0.0001) | dp$risk$Name == 'Portfolio:'
-                   ,select=names(dp$risk)[c(2:18,27,28,37,40,42,43)]) %>%
+                   ,select=names(dp$risk)[c(2:18,27,28,37,40,42,43,44,45)]) %>%
   mutate(std_log_returns = std_log_returns * 100) %>% 
   mutate(std_log_returns_1Y = std_log_returns_1Y * 100) %>%
   mutate(VolaN1_MSGARCH = VolaN1_MSGARCH * 100) %>%
@@ -154,48 +197,4 @@ formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'
   formatStyle('ind VaR MSGARCH', background = color_from_middle(risk.Table$`ind VaR MSGARCH`,'pink','pink'))
 ```
 
-<center>
-```{r include = TRUE, echo=FALSE, fig.align='center'}
-
-ts_a2 <-  xts::xts(x = cbind(-100 *portRisk$`VaR bootstrap 95Quantile`,
-                            -100 *portRisk$VaR_bootstrap, 
-                            -100 *portRisk$`VaR bootstrap 05Quantile`,
-                            100 * portRisk$VolaN1_MSGARCH), 
-                  order.by = as.Date(portRisk$CloseDate))
-names(ts_a2) <-  c("lwr", "fit", "upr","VolaN1_MSGARCH")
-
-VaREuro <- dp$position$Value[dp$position$AlphaVantage=='Port']*tail(ts_a2$fit,1)/100
-titleVaR <- paste0("Portfolio VaR ",round(tail(ts_a2$fit,1),2), '% - ',round(VaREuro,2),'€')
-
-dygraphs::dygraph(ts_a2, main = titleVaR, width = 1800) %>%
-  dyAxis("x", drawGrid = FALSE) %>%
-  dyAxis("y", label='VaR in %', drawGrid = FALSE) %>%
-  dySeries(c("lwr", "fit", "upr"), label = "VaR 0.95") %>%
-  dyOptions(colors = RColorBrewer::brewer.pal(3, "Set1")) %>%
-  dySeries("VolaN1_MSGARCH", axis = 'y2') %>%
-  dyAxis("y2", label="VolaN1_MSGARCH", drawGrid = FALSE) %>%
-  dyRangeSelector(height = 20)
-```
-</center>
-<center>
-```{r include = TRUE, echo=FALSE, fig.align='center'}
-ts_a <-  xts::xts(x = cbind(-100 *portRisk$`ES bootstrap 95Quantile`,
-                            -100 *portRisk$`ES bootstrap`, 
-                            -100 *portRisk$`ES bootstrap 05Quantile`,
-                      100 * portRisk$VolaN1_MSGARCH), 
-                 order.by = as.Date(portRisk$CloseDate))
-names(ts_a) <-  c("lwr", "fit", "upr","VolaN1_MSGARCH")
-
-ESEuro <- dp$position$Value[dp$position$AlphaVantage=='Port']*tail(ts_a$fit,1)/100
-titleES <- paste0("Portfolio ES ",round(tail(ts_a$fit,1),2), '% - ',round(ESEuro,2),'€')
-dygraphs::dygraph(ts_a, main = titleES, width = 1800) %>%
-  dyAxis("x", drawGrid = FALSE) %>%
-  dyAxis("y", label='ES in %', drawGrid = FALSE) %>%
-  dySeries(c("lwr", "fit", "upr"), label = "ES 0.95") %>%
-  dyOptions(colors = RColorBrewer::brewer.pal(3, "Set1")) %>%
-  dySeries("VolaN1_MSGARCH", axis = 'y2') %>%
-  dyAxis("y2", label="VolaN1_MSGARCH", drawGrid = FALSE) %>%
-  dyRangeSelector(height = 20)
-```
-</center>
 

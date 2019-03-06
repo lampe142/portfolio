@@ -64,3 +64,10 @@ ggplot(dataset, aes(map_id = state)) +
         plot.background=element_blank())
 
 ggsave(filename="DashboardOutput/us.states.png")
+
+gmailr::mime() %>%
+  gmailr::to("maxlampe@posteo.de") %>%
+  gmailr::from("lampe142@googlemail.com")%>%
+  gmailr::subject(paste('Cannabis price', Sys.Date()))%>%
+  gmailr::attach_file(filename = 'DashboardOutput/us.states.png')%>%
+  gmailr::send_message()
