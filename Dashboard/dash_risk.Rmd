@@ -66,8 +66,8 @@ dygraphs::dygraph(ts_a, main = titleES, width = 1800) %>%
 <p style="text-align: center;">  Open Positions: </p>
 
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
-dp$risk %>% subset(dp$risk$SharePortfolio>0.0001 | dp$risk$Name == 'Portfolio:'
-                   ,select=names(dp$risk)[c(2:18,27,28,37,40,42,43,44,45)]) %>%
+dp$risk %>% subset((!is.na(dp$risk$SharePortfolio) & dp$risk$SharePortfolio>0.0001) | dp$risk$Name == 'Portfolio:'
+                   ,select=names(dp$risk)[c(2:18,27,28,37,40,42,43)]) %>%
   mutate(std_log_returns = std_log_returns * 100) %>% 
   mutate(std_log_returns_1Y = std_log_returns_1Y * 100) %>%
   mutate(VolaN1_MSGARCH = VolaN1_MSGARCH * 100) %>%
@@ -138,7 +138,7 @@ formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'
 ```{r include = TRUE, echo=FALSE, fig.align='center'}
 
 dp$risk %>% subset(!(dp$risk$SharePortfolio>0.0001) | dp$risk$Name == 'Portfolio:'
-                   ,select=names(dp$risk)[c(2:18,27,28,37,40,42,43,44,45)]) %>%
+                   ,select=names(dp$risk)[c(2:18,27,28,37,40,42,43)]) %>%
   mutate(std_log_returns = std_log_returns * 100) %>% 
   mutate(std_log_returns_1Y = std_log_returns_1Y * 100) %>%
   mutate(VolaN1_MSGARCH = VolaN1_MSGARCH * 100) %>%
