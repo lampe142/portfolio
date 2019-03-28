@@ -199,4 +199,80 @@ formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR Share`,'
   formatStyle('ind VaR MSGARCH', background = color_from_middle(risk.Table$`ind VaR MSGARCH`,'pink','pink'))
 ```
 
+```{r include = TRUE, echo=FALSE, fig.align='center'}
+dp$risk %>% subset(is.na(dp$risk$SharePortfolio) | dp$risk$Name == 'Portfolio:') %>%
+  mutate(std_log_returns = std_log_returns * 100) %>% 
+  mutate(std_log_returns_1Y = std_log_returns_1Y * 100) %>%
+  mutate(VolaN1_MSGARCH = VolaN1_MSGARCH * 100) %>%
+  dplyr::rename(`ind VaR MSGARCH`=ind_VaR_MSGARCH)%>%
+  dplyr::rename(`250D CAPM Return`=`250D.CAPM.Return`)%>%
+  dplyr::rename(`250D log Return`=`250D.logReturn`)%>%
+  dplyr::rename(`Jensen Alpha`=Jensen.Alpha)%>%
+  dplyr::rename(`std log returns`=std_log_returns)%>%  
+  dplyr::rename(`std log returns 1Y`=std_log_returns_1Y)%>%  
+  dplyr::rename(`std N1 MSGARCH`= VolaN1_MSGARCH)%>%
+  dplyr::rename(`ES MSGARCH`= ES_MSGARCH)%>%
+  plyr::arrange(!SharePortfolio)  -> risk.Table2
 
+risk.Table2 <- risk.Table2[,c(2:4,7:40,44,45)]
+
+risk.Table2 <- replace(risk.Table2, is.na(risk.Table2),0)
+datatable(risk.Table2, extensions = 'Buttons', options = list(pageLength = 100,
+dom = 'Bfrtip',buttons = list('copy', 'csv', 'excel', 'pdf', 'print',
+list(extend = 'colvis',visible=F, targets= 0, columns = c(3:dim(risk.Table2)[2]))))) %>%
+  formatRound('Beta', digits = 2, interval = 3, mark = " ")%>%
+  formatStyle('Beta', background = color_from_middle(risk.Table$Beta,'pink','pink')) %>%
+  formatRound('Beta1Y', digits = 2, interval = 3, mark = " ")%>%
+  formatStyle('Beta1Y', background = color_from_middle(risk.Table$Beta1Y,'pink','pink')) %>%
+  formatPercentage('250D log Return', 1) %>%
+  formatStyle('250D log Return', background = color_from_middle(risk.Table$`250D log Return`,'pink','pink')) %>%
+  formatPercentage('250D CAPM Return', 1) %>%
+  formatStyle('250D CAPM Return', background = color_from_middle(risk.Table$`250D CAPM Return`,'pink','pink')) %>%
+  formatRound('Jensen Alpha', digits = 2, interval = 3, mark = " ")%>%
+  formatStyle('Jensen Alpha', background = color_from_middle(risk.Table$`Jensen Alpha`,'pink','lightblue')) %>%
+  formatRound('std log returns', digits = 1, interval = 3, mark = " ")%>%
+  formatStyle('std log returns', background = color_from_middle(risk.Table$`std log returns`,'pink','pink')) %>%
+  formatRound('std log returns 1Y', digits = 1, interval = 3, mark = " ")%>%
+  formatStyle('std log returns 1Y', background = color_from_middle(risk.Table$`std log returns 1Y`,'pink','pink')) %>%
+  formatPercentage('individual VaR Bootstrap', 1) %>%
+  formatRound(names(risk.Table2)[17], digits = 3, interval = 3, mark = " ")%>%
+  formatRound('incremental VaR', digits = 4, interval = 3, mark = " ")%>%
+  formatRound("incremental VaR to Port VaR (share Portfolio VaR)", digits = 4, interval = 3, mark = " ")%>%
+  formatRound('incremental VaR per Value', digits = 4, interval = 3, mark = " ")%>%
+  formatRound('share Portfolio VaR / share portfolio', digits = 4, interval = 3, mark = " ")%>%
+  
+  #formatStyle('Beta', background = color_from_middle(risk.Table$Beta,'pink','pink')) %>%
+  #  formatStyle('individual VaR Bootstrap', background = color_from_middle(risk.Table$`individual VaR Bootstrap`,'pink','pink')) %>%
+  formatRound('std N1 MSGARCH', digits = 1, interval = 3, mark = " ")%>%
+  formatStyle('std N1 MSGARCH', background = color_from_middle(risk.Table$`std N1 MSGARCH`,'pink','pink')) %>%
+  formatPercentage('VaR Normal std1Y', 1) %>%
+  formatStyle('VaR Normal std1Y', background = color_from_middle(risk.Table$`VaR Normal std1Y`,'pink','pink')) %>%
+  formatPercentage('VaR Normal', 1) %>%
+  formatStyle('VaR Normal', background = color_from_middle(risk.Table$`VaR Normal`,'pink','pink')) %>%
+  formatPercentage('VaR HS 1Y', 1) %>%
+  formatStyle('VaR HS 1Y', background = color_from_middle(risk.Table$`VaR HS 1Y`,'pink','pink')) %>%
+  #  formatPercentage('VaR Share', 1) %>%
+  #  formatStyle('VaR Share', background = color_from_middle(risk.Table$`VaR_Share`,'pink','pink')) %>%
+  formatPercentage('ES MSGARCH', 1) %>%
+  formatStyle('ES MSGARCH', background = color_from_middle(risk.Table$`ES MSGARCH`,'pink','pink')) %>%
+  formatPercentage(names(risk.Table2)[35], 1) %>%
+  formatPercentage(names(risk.Table2)[36], 1) %>%
+  formatPercentage('ES bootstrap', 1) %>%
+  formatStyle('ES bootstrap', background = color_from_middle(risk.Table$`ES bootstrap`,'pink','pink')) %>%
+  formatPercentage(names(risk.Table2)[22], 1) %>%
+  formatPercentage(names(risk.Table2)[23], 1) %>%
+  formatPercentage(names(risk.Table2)[26], 1) %>%
+  formatPercentage(names(risk.Table2)[27], 1) %>%
+  formatPercentage(names(risk.Table2)[28], 1) %>%
+  formatPercentage(names(risk.Table2)[29], 1) %>%
+  formatPercentage(names(risk.Table2)[30], 1) %>%
+  formatPercentage(names(risk.Table2)[31], 1) %>%
+  formatPercentage(names(risk.Table2)[32], 1) %>%
+  formatPercentage(names(risk.Table2)[33], 1) %>%
+  formatPercentage('VaR_bootstrap', 1) %>%
+  formatStyle('VaR_bootstrap', background = color_from_middle(risk.Table$`VaR_bootstrap`,'pink','pink')) %>%
+  formatPercentage('ind VaR MSGARCH', 1) %>%
+  formatStyle('ind VaR MSGARCH', background = color_from_middle(risk.Table$`ind VaR MSGARCH`,'pink','pink'))%>%
+  formatPercentage('component VaR', 1) %>%
+  formatStyle('component VaR', background = color_from_middle(risk.Table$`component VaR`,'pink','pink'))
+```
