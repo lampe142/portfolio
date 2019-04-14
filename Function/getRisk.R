@@ -4,79 +4,85 @@
 # updateRisk(logR = dm$logRet,rf = dp$FX$rf1y)
 # rf: 1 year risk free rate
 updateRisk <- function(logR, rf, nBoot=100){
-  dp$risk$Value <<- dp$position$Value
-  dp$risk$SharePortfolio <<- dp$position$SharePortfolio
 #  risk <- readxl::read_excel(path=fileName, sheet='Risk')
   lY <- lubridate::ymd(index(tail(logR[,"ACWI"],1))) - lubridate::years(1)
   tD <- lubridate::ymd(index(tail(logR[,"ACWI"],1)))
   
+  dp$position$'Beta' <<- NA
+  dp$position$'Beta1Y' <<- NA
+  dp$position$std_log_returns <<- NA
+  dp$position$std_log_returns_1Y <<- NA
+  dp$position$CAPM.Return <<- NA
+  dp$position$CAPM.Return.D1 <<- NA
+  dp$position$'250D.CAPM.Return' <<- NA
+  dp$position$CAPM.Return.D5 <<- NA
+  dp$position$CAPM.Return.D23 <<- NA  
+  dp$position$Jensen.Alpha <<- NA  
+  
   for(iAss in colnames(logR)){
-    iAssPos <- which(dp$risk$AlphaVantage == iAss)
+    iAssPos <- which(dp$position$AlphaVantage == iAss)
     # Beta entire time period
-    dp$risk$'Beta'[iAssPos] <<- stats::cov(logR[,"ACWI"], logR[,iAss]) / stats::var(logR[,"ACWI"])
+    dp$position$'Beta'[iAssPos] <<- stats::cov(logR[,"ACWI"], logR[,iAss]) / stats::var(logR[,"ACWI"])
     
     # Beta last year
-    dp$risk[iAssPos, "Beta1Y"] <<- stats::cov(logR[paste(lY,tD,sep='/'), 'ACWI'], logR[paste(lY,tD,sep='/'), iAss]) /
+    dp$position[iAssPos, "Beta1Y"] <<- stats::cov(logR[paste(lY,tD,sep='/'), 'ACWI'], logR[paste(lY,tD,sep='/'), iAss]) /
       stats::var(logR[paste(lY,tD,sep='/'), 'ACWI'])
     
     dm$logRetPort
     
     # standard deviations
-    dp$risk[iAssPos, "std_log_returns"]  <<- sd(logR[,iAss])
-    dp$risk[iAssPos, "std_log_returns_1Y"] <<- sd(logR[paste(lY,tD,sep='/'), iAss])
+    dp$position[iAssPos, "std_log_returns"]  <<- sd(logR[,iAss])
+    dp$position[iAssPos, "std_log_returns_1Y"] <<- sd(logR[paste(lY,tD,sep='/'), iAss])
   }
   # compute stats for the entire Portfolio:
-  dp$risk['Port','Beta'] <<- stats::cov(logR[,"ACWI"], dm$logRetPort) / stats::var(logR[,"ACWI"])
-  dp$risk['Port','Beta1Y'] <<- stats::cov(logR[paste(lY,tD,sep='/'), 'ACWI'], dm$logRetPort[paste(lY,tD,sep='/')]) /
+  dp$position['portfolio','Beta'] <<- stats::cov(logR[,"ACWI"], dm$logRetPort) / stats::var(logR[,"ACWI"])
+  dp$position['portfolio','Beta1Y'] <<- stats::cov(logR[paste(lY,tD,sep='/'), 'ACWI'], dm$logRetPort[paste(lY,tD,sep='/')]) /
   stats::var(logR[paste(lY,tD,sep='/'), 'ACWI'])
-  dp$risk['Port', "std_log_returns"]  <<- sd(dm$logRetPort)
-  dp$risk['Port', "std_log_returns_1Y"] <<- sd(dm$logRetPort[paste(lY,tD,sep='/')])
+  dp$position['portfolio', "std_log_returns"]  <<- sd(dm$logRetPort)
+  dp$position['portfolio', "std_log_returns_1Y"] <<- sd(dm$logRetPort[paste(lY,tD,sep='/')])
   
-  dp$position$'CAPM.Return.D1' <<- as.vector(coredata(tail(rf,1))) + dp$risk$Beta1Y*
+  dp$position$'CAPM.Return.D1' <<- as.vector(coredata(tail(rf,1))) + dp$position$Beta1Y*
     (coredata(tail(logR[,"ACWI"],1)) -coredata(tail(rf,1)))
-  
+  while (is_empty(as.vector(dm$adjClose[lY,"ACWI"]))) { lY <- date+1}
   rmD250 <- as.vector(dm$adjClose[tD,"ACWI"])/ as.vector(dm$adjClose[lY,"ACWI"])-1
-  dp$risk$'250D.CAPM.Return' <<- as.vector(coredata(tail(rf,1))) + dp$risk$Beta1Y*
+  dp$position$'250D.CAPM.Return' <<- as.vector(coredata(tail(rf,1))) + dp$position$Beta1Y*
     as.vector(( rmD250 * length(logR[paste(lY,tD,sep='/'),"ACWI"])
                -coredata(tail(rf,1))))
 
   date <- lubridate::ymd(index(tail(logR[,"ACWI"],1))) - lubridate::days(5)
+  while (is_empty(as.vector(dm$adjClose[date,"ACWI"]))) { date <- date+1}
   rmD5 <- as.vector(dm$adjClose[tD,"ACWI"]) / as.vector(dm$adjClose[date,"ACWI"])-1
-  dp$risk$'CAPM.Return.D5' <<- as.vector(coredata(tail(rf,1))) + dp$risk$Beta1Y *
+  dp$position$'CAPM.Return.D5' <<- as.vector(coredata(tail(rf,1))) + dp$position$Beta1Y *
     as.vector(( rmD5 * length(logR[paste(lY,tD,sep='/'),"ACWI"]) - coredata(tail(rf,1))))
     
   date <- lubridate::ymd(index(tail(logR[,"ACWI"],1))) - lubridate::days(30)
+  while (is_empty(as.vector(dm$adjClose[date,"ACWI"]))) { date <- date+1}
   rmD23 <- as.vector(dm$adjClose[tD,"ACWI"])/ as.vector(dm$adjClose[date,"ACWI"])-1
-  dp$risk$'CAPM.Return.D23' <<- as.vector(coredata(tail(rf,1))) + dp$risk$Beta1Y*
+  dp$position$'CAPM.Return.D23' <<- as.vector(coredata(tail(rf,1))) + dp$position$Beta1Y *
     as.vector(( rmD23 * length(logR[paste(lY,tD,sep='/'),"ACWI"])
                 -coredata(tail(rf,1))))
   
   
-  dp$position['Port','CAPM.Return'] <<- as.vector(coredata(tail(rf,1))) + dp$risk['Port','Beta1Y'] *
+  dp$position['portfolio','CAPM.Return'] <<- as.vector(coredata(tail(rf,1))) + dp$position['portfolio','Beta1Y'] *
     (coredata(tail(logR[,"ACWI"],1)) - coredata(tail(rf,1)))
-  
-  
-  dp$risk$SharePortfolio <<- dp$position$SharePortfolio
-  dp$risk$Value <<- dp$position$Value
-  dp$risk$'250D.logReturn' <<- dp$position$'250D.logReturn'
-  dp$risk$CloseDate <<- dp$position$CloseDate
-  dp$risk$'Jensen.Alpha' <<- dp$risk$'250D.logReturn' - dp$risk$'250D.CAPM.Return'
+
+  dp$position$'Jensen.Alpha' <<- dp$position$'250D.logReturn' - dp$position$'250D.CAPM.Return'
   
   posPort <- which(dp$position$Name=="Portfolio:")
-  dp$risk$'Beta'[posPort] <<- replace(dp$risk$'Beta', is.na(dp$risk$'Beta'),0) %*% 
-    replace(dp$risk$SharePortfolio, is.na(dp$risk$SharePortfolio),0)
-  dp$risk$'Beta1Y'[posPort] <<- replace(dp$risk$'Beta1Y', is.na(dp$risk$'Beta1Y'),0) %*% 
-    replace(dp$risk$SharePortfolio, is.na(dp$risk$SharePortfolio),0)
+  dp$position$'Beta'[posPort] <<- replace(dp$position$'Beta', is.na(dp$position$'Beta'),0) %*% 
+    replace(dp$position$SharePortfolio, is.na(dp$position$SharePortfolio),0)
+  dp$position$'Beta1Y'[posPort] <<- replace(dp$position$'Beta1Y', is.na(dp$position$'Beta1Y'),0) %*% 
+    replace(dp$position$SharePortfolio, is.na(dp$position$SharePortfolio),0)
   
   # standard deviations
   
   mergIndex <- dp$position$AlphaVantage %in% names(dm$logRet)
-  dp$risk[posPort, "std_log_returns"]  <<- sd(dm$logRet %*% 
+  dp$position[posPort, "std_log_returns"]  <<- sd(dm$logRet %*% 
    dp$position$SharePortfolio[mergIndex])
-  dp$risk[posPort, "std_log_returns_1Y"] <<- sd(dm$logRet[paste(lY,tD,sep='/'),] %*%
+  dp$position[posPort, "std_log_returns_1Y"] <<- sd(dm$logRet[paste(lY,tD,sep='/'),] %*%
     dp$position$SharePortfolio[mergIndex])
   
-  dp$risk$Category[posPort] <<-'Portfolio:'
+  dp$position$Category[posPort] <<-'Portfolio:'
   
   return()
 }
@@ -96,31 +102,42 @@ getRisk <- function(logR, nBoot=100){
   # colnames(dm$logRet)[x]
   
   #compute portfolio VaR
-  dp$risk[dp$position$Name=="Portfolio:", "VaR HS 1Y"] <- 
+  dp$position$'VaR HS 1Y' <<- NA
+  dp$position[dp$position$Name=="Portfolio:", "VaR HS 1Y"] <- 
     compVaRPort(logR=dm$logRet, weight= hVaR.weight)
   #compute portfolio ES
-  dp$risk[dp$position$Name=="Portfolio:", "ES"] <- 
+  dp$position$ES <<- NA
+  dp$position[dp$position$Name=="Portfolio:", "ES"] <- 
     compESPort(logR=dm$logRet, weight= hVaR.weight)
   # compute incremental VaR
-  dp$risk[hVaR.index,'incremental VaR'] <- incVaR(logR=dm$logRet, hVaR.weight= hVaR.weight)
-  dp$risk[hVaR.index,'incremental VaR to Port VaR (share Portfolio VaR)'] <- dp$risk[hVaR.index,'incremental VaR'] / 
-    unlist(dp$risk[dp$position$Name=="Portfolio:", "VaR HS 1Y"])
-  dp$risk[hVaR.index,'incremental VaR per Value'] <- dp$risk[hVaR.index,'incremental VaR'] / dp$risk$Value[hVaR.index]
+  dp$position$'incremental VaR' <<- NA
+  dp$position[hVaR.index,'incremental VaR'] <- incVaR(logR=dm$logRet, hVaR.weight= hVaR.weight)
+  dp$position$'incremental VaR to Port VaR (share Portfolio VaR)' <<- NA
+  dp$position[hVaR.index,'incremental VaR to Port VaR (share Portfolio VaR)'] <- dp$position[hVaR.index,'incremental VaR'] / 
+    unlist(dp$position[dp$position$Name=="Portfolio:", "VaR HS 1Y"])
+  dp$position$'incremental VaR per Value' <<- NA
+  dp$position[hVaR.index,'incremental VaR per Value'] <- dp$position[hVaR.index,'incremental VaR'] / dp$position$Value[hVaR.index]
   
-  dp$risk[hVaR.index,'share Portfolio VaR / share portfolio'] <- 
-    dp$risk[hVaR.index,'incremental VaR to Port VaR (share Portfolio VaR)'] /
+  dp$position$'share Portfolio VaR / share portfolio' <<- NA
+  dp$position[hVaR.index,'share Portfolio VaR / share portfolio'] <- 
+    dp$position[hVaR.index,'incremental VaR to Port VaR (share Portfolio VaR)'] /
     dp$position[hVaR.index,'SharePortfolio']
   
   # compute marginal VaR
-  dp$risk[hVaR.index,'marginal VaR in €'] <- mVaR(dm$logRet, hVaR.weight, dp$position, hVaR.index) 
+  dp$position$'marginal VaR in €' <<- NA
+  dp$position[hVaR.index,'marginal VaR in €'] <- mVaR(dm$logRet, hVaR.weight, dp$position, hVaR.index) 
   
   #compute individual VaR and ES 
+  dp$position$'VaR Normal std1Y' <<- NA
+  dp$position$'VaR Normal' <<- NA
+  dp$position$'VaR HS 1Y' <<- NA
+  dp$position$'individual VaR Bootstrap' <<- NA
   for(iAss in colnames(logR)){
-    iAssPos <- which(dp$risk$AlphaVantage == iAss)
-    dp$risk[iAssPos, "VaR Normal std1Y"] <- -2.33 * sd(logR[paste(lY,tD,sep='/'), iAss])
-    dp$risk[iAssPos, "VaR Normal"] <- -2.33 * sd(logR[,iAss])
-    dp$risk[iAssPos, "VaR HS 1Y"] <- unlist(quantile(logR[paste(lY,tD,sep='/'), iAss], 0.01))
-    dp$risk[iAssPos, "individual VaR Bootstrap"] <- mean(bootstrap::bootstrap(logR[,iAss], nBoot, theta=quantile, p=0.01)$thetastar)
+    iAssPos <- which(dp$position$AlphaVantage == iAss)
+    dp$position[iAssPos, "VaR Normal std1Y"] <- -2.33 * sd(logR[paste(lY,tD,sep='/'), iAss])
+    dp$position[iAssPos, "VaR Normal"] <- -2.33 * sd(logR[,iAss])
+    dp$position[iAssPos, "VaR HS 1Y"] <- unlist(quantile(logR[paste(lY,tD,sep='/'), iAss], 0.01))
+    dp$position[iAssPos, "individual VaR Bootstrap"] <- mean(bootstrap::bootstrap(logR[,iAss], nBoot, theta=quantile, p=0.01)$thetastar)
   }
   
   return()
@@ -173,7 +190,7 @@ mVaR <- function(logR, hVaR.weight, position, hVaR.index){
 # portRisk <- cbind(portRisk, data.frame(VolaN1_MSGARCH=matrix(data = rep(NA,nrow(portRisk)))))
 savePortRisk <- function(verbose = F){
   load(paste0(here::here(),"/Data/portRisk.RData"))
-  portRisk <- rbind(portRisk, dp$risk["Port",c("CloseDate","Beta1Y","Beta","Jensen.Alpha","250D.CAPM.Return","std_log_returns_1Y","VaR bootstrap 05Quantile","VaR_bootstrap","VaR bootstrap 95Quantile",
+  portRisk <- rbind(portRisk, dp$position["portfolio",c("CloseDate","Beta1Y","Beta","Jensen.Alpha","250D.CAPM.Return","std_log_returns_1Y","VaR bootstrap 05Quantile","VaR_bootstrap","VaR bootstrap 95Quantile",
                                                  "VolaN1_MSGARCH","MSGARCH_prob","ES_MSGARCH", "ES bootstrap 05Quantile","ES bootstrap" ,"ES bootstrap 95Quantile")])
   if(verbose) View(portRisk)
   save(file=paste0(here::here(),"/Data/portRisk.RData"), portRisk)
