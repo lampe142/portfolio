@@ -44,10 +44,16 @@ updateRisk <- function(logR, rf, nBoot=100){
   dp$position$'CAPM.Return.D1' <<- as.vector(coredata(tail(rf,1))) + dp$position$Beta1Y*
     (coredata(tail(logR[,"ACWI"],1)) -coredata(tail(rf,1)))
   while (is_empty(as.vector(dm$adjClose[lY,"ACWI"]))) { lY <- date+1}
+
+  dp$position$'CAPM.Return.D1' <<- as.vector(coredata(tail(rf,1))) + dp$risk$Beta1Y*
+    as.vector(coredata(tail(logR[,"ACWI"],1)) - coredata(tail(rf,1)))
+
   rmD250 <- as.vector(dm$adjClose[tD,"ACWI"])/ as.vector(dm$adjClose[lY,"ACWI"])-1
+
   dp$position$'250D.CAPM.Return' <<- as.vector(coredata(tail(rf,1))) + dp$position$Beta1Y*
     as.vector(( rmD250 * length(logR[paste(lY,tD,sep='/'),"ACWI"])
                -coredata(tail(rf,1))))
+
 
   date <- lubridate::ymd(index(tail(logR[,"ACWI"],1))) - lubridate::days(5)
   while (is_empty(as.vector(dm$adjClose[date,"ACWI"]))) { date <- date+1}
@@ -61,7 +67,8 @@ updateRisk <- function(logR, rf, nBoot=100){
   dp$position$'CAPM.Return.D23' <<- as.vector(coredata(tail(rf,1))) + dp$position$Beta1Y *
     as.vector(( rmD23 * length(logR[paste(lY,tD,sep='/'),"ACWI"])
                 -coredata(tail(rf,1))))
-  
+
+ 
   
   dp$position['portfolio','CAPM.Return'] <<- as.vector(coredata(tail(rf,1))) + dp$position['portfolio','Beta1Y'] *
     (coredata(tail(logR[,"ACWI"],1)) - coredata(tail(rf,1)))

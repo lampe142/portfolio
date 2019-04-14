@@ -4,6 +4,7 @@ source('E-Mail/send_email_profileRep.R')
 # gar_auth(token = ".httr-oauth",new_user = FALSE) 
 gmailr::mime() %>%
   gmailr::to("maxlampe@posteo.de") %>%
+#  gmailr::to("lampe142@googlemail.com") %>%
   gmailr::from("lampe142@googlemail.com")%>%
   gmailr::subject(paste('Portfolio Performance Max', Sys.Date()))%>%
   gmailr::html_body("attached is my portfolio performance")%>%
@@ -12,6 +13,7 @@ gmailr::mime() %>%
 
 gmailr::mime() %>%
   gmailr::to("maxlampe@posteo.de") %>%
+  #  gmailr::to("lampe142@googlemail.com") %>%
   gmailr::from("lampe142@googlemail.com")%>%
   gmailr::subject(paste('Portfolio Risk Max', Sys.Date()))%>%
   gmailr::html_body("attached is my portfolio")%>%
