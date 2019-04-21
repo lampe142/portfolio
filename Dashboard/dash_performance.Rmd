@@ -14,9 +14,9 @@ header-includes:
 ---
 
 ```{r echo=T, results='hide', echo=FALSE}
-setwd(here::here())
-suppressMessages(source('profileRep.R'))
-load("Data/Portfolio_Market.RData")
+#setwd(here::here())
+#suppressMessages(source('profileRep.R'))
+#load("Data/Portfolio_Market.RData")
 ```
 <p style="text-align: center;"> # Cboe Volatility Index: </p>
 <center>
@@ -40,126 +40,239 @@ dygraphs::dygraph(ts_a, main = textMain, width = 1800) %>%
 
 <p style="text-align: center;">  Performance aggregated by category: </p>
 ```{r include = TRUE, echo=FALSE}
-dp$position %>% subset(!(Category=='Benchmark') & (dp$risk$SharePortfolio>0.0001) ,
-                       select=c('Category',
-                                'SharePortfolio', 
-                                'Value',
-                                '1D.return',
-                                "1D.logReturn",
-                                "5D.logReturn",
-                                "23D.logReturn",
-                                "125D.logReturn",
-                                "250D.logReturn")) %>% 
-  mutate(L1Value=Value / (1 +`1D.logReturn`),
-         L5Value=Value / (1 +`5D.logReturn`),
-         `5D.return`= L5Value * `5D.logReturn`,
-         L23Value=Value / (1 +`23D.logReturn`),
-         `23D.return`= L23Value * `23D.logReturn`,
-         L125Value=Value / (1 +`125D.logReturn`),
-         `125D.return`= L125Value * `125D.logReturn`,
-         L250Value=Value / (1 +`250D.logReturn`),
-         `250D.return`= L250Value * `250D.logReturn`) %>%
-  group_by(Category) %>% 
-  summarize(
-    Value=round(sum(Value),0),
-    SharePortfolio = sum(SharePortfolio),
-    `1D.return`=round(sum(`1D.return`),0),
-    `1D.logReturn`= sum(`1D.return`),
-    `L1Value`= sum(L1Value),
-    `5D.logReturn`= sum(`5D.return`),
-    `L5Value`= sum(L5Value),
-    `23D.logReturn`= sum(`23D.return`),
-    `L23Value`= sum(L23Value),
-    `125D.logReturn`= sum(`125D.return`),
-    `L125Value`= sum(L125Value),
-    `250D.logReturn`= sum(`250D.return`),
-    `L250Value`= sum(L250Value)
-  ) %>%
-  mutate(`1D.logReturn`=`1D.logReturn`/`L1Value`)%>%
-  mutate(`5D.logReturn`=`5D.logReturn`/`L5Value`)%>%
-  mutate(`23D.logReturn`=`23D.logReturn`/`L23Value`)%>%
-  mutate(`125D.logReturn`=`125D.logReturn`/`L125Value`)%>%
-  mutate(`250D.logReturn`=`250D.logReturn`/`L250Value`)%>%
-  dplyr::rename(D1.LR = `1D.logReturn`,
-                D5.LR = `5D.logReturn`,
-                D23.LR = `23D.logReturn`,
-                D125.LR = `125D.logReturn`,
-                D250.LR = `250D.logReturn`) %>%
-  select(-c(L1Value,L5Value,L23Value,L125Value,L250Value)) -> t2
-
-t2%>%
+replace(dp$position, is.na(dp$position),0) %>% 
+  subset(dp$position$SharePortfolio>0.001,
+         select=c('Category',
+                  'SharePortfolio', 
+                  'Value',
+                  'ab_return_D1',
+                  'return_D1',
+                  'CAPM_return_D1',
+                  'ab_return_D5',
+                  'return_D5',
+                  'CAPM_return_D5',
+                  'ab_return_D23',
+                  'return_D23',
+                  'CAPM_return_D23',
+                  'ab_return_D125',
+                  'return_D125',
+                  'CAPM_return_D125',
+                  'ab_return_D250',
+                  'return_D250',
+                  'CAPM_return_D250')) %>%
+  mutate(CAPM_return_D1=SharePortfolio * CAPM_return_D1,
+         CAPM_return_D5=SharePortfolio * CAPM_return_D5,
+         CAPM_return_D23=SharePortfolio * CAPM_return_D23,
+         CAPM_return_D125=SharePortfolio * CAPM_return_D125,
+         CAPM_return_D250=SharePortfolio * CAPM_return_D250,
+         return_D1 = SharePortfolio * return_D1,
+         return_D5 = SharePortfolio * return_D5,
+         return_D23 = SharePortfolio * return_D23,
+         return_D125 = SharePortfolio * return_D125,
+         return_D250 = SharePortfolio * return_D250
+         )%>%
+ group_by(Category) %>% summarize(
+    SharePortfolio=sum(SharePortfolio),
+Value=sum(Value),
+ab_return_D1= sum(ab_return_D1),
+return_D1 = sum(return_D1),
+CAPM_return_D1 = sum(CAPM_return_D1),
+ab_return_D5 = sum(ab_return_D5),
+return_D5 = sum(return_D5),
+CAPM_return_D5 = sum(CAPM_return_D5),
+ab_return_D23 = sum(ab_return_D23),
+return_D23 = sum(return_D23),
+CAPM_return_D23 = sum(CAPM_return_D23),
+ab_return_D125 = sum(ab_return_D125),
+return_D125 = sum(return_D125),
+CAPM_return_D125 = sum(CAPM_return_D125),
+ab_return_D250 = sum(ab_return_D250),
+return_D250 = sum(return_D250),
+CAPM_return_D250 = sum(CAPM_return_D250))%>%
   datatable(extensions = 'Buttons', options = list(pageLength = 100,
-    dom = 'Bfrtip',
-    buttons = list('copy', 'csv', 'excel', 'pdf', 'print',
-    list(extend = 'colvis',visible=F, targets= 0, columns = c(3:dim(t2)[2])))
-        ))%>%
+                                                   dom = 'Bfrtip', buttons = list('copy', 'csv', 'excel', 'pdf', 'print',
+                                                                                  list(extend = 'colvis',visible=F, targets= 0, columns = c(3:dim(t2)[2])))
+  ))%>%
   formatCurrency('Value', '\U20AC', digits = 0) %>%
-    formatCurrency('1D.return', '\U20AC', digits = 0) %>%
-  formatPercentage('D1.LR', 2) %>%
-  formatStyle('D1.LR', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
-formatPercentage('D5.LR', 2) %>%
-  formatStyle('D5.LR', background = color_from_middle(t2$D5.LR,'pink','lightgreen'))%>%
-  formatPercentage('D23.LR', 2) %>%
-  formatStyle('D23.LR', background = color_from_middle(t2$D23.LR,'pink','lightgreen'))%>%
-  formatPercentage('D125.LR', 2) %>%
-  formatStyle('D125.LR', background = color_from_middle(t2$D125.LR,'pink','lightgreen'))%>%
-  formatPercentage('D250.LR', 2) %>%
-  formatStyle('D250.LR', background = color_from_middle(t2$D250.LR,'pink','lightgreen'))%>%
   formatPercentage('SharePortfolio', 1) %>%
-  formatStyle('SharePortfolio', background = color_from_middle(t2$SharePortfolio,'lightblue','lightblue'))
+  formatStyle('SharePortfolio', background = color_from_middle(t2$SharePortfolio,'lightblue','lightblue')) %>%
+  
+  formatPercentage('return_D1', 2)%>%
+  formatStyle('return_D1', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatPercentage('CAPM_return_D1', 2)%>%
+  formatStyle('CAPM_return_D1', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D1', '\U20AC', digits = 0)  %>%
+  
+  formatPercentage('return_D5', 2)%>%
+  formatStyle('return_D5', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D5', '\U20AC', digits = 0)  %>%
+  formatPercentage('CAPM_return_D5', 2)%>%
+  formatStyle('CAPM_return_D5', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D5', '\U20AC', digits = 0)  %>%
+  
+  formatPercentage('return_D23', 2)%>%
+  formatStyle('return_D23', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D23', '\U20AC', digits = 0) %>%
+  formatPercentage('CAPM_return_D23', 2)%>%
+  formatStyle('CAPM_return_D23', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D23', '\U20AC', digits = 0)  %>%
+  
+  formatPercentage('return_D125', 2)%>%
+  formatStyle('return_D125', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D125', '\U20AC', digits = 0)   %>%
+  formatPercentage('CAPM_return_D125', 2)%>%
+  formatStyle('CAPM_return_D125', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D125', '\U20AC', digits = 0)  %>%
+  
+  formatPercentage('return_D250', 2)%>%
+  formatStyle('return_D250', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D250', '\U20AC', digits = 0) %>%
+  formatPercentage('CAPM_return_D250', 2)%>%
+  formatStyle('CAPM_return_D250', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D250', '\U20AC', digits = 0)
 ```
-
-<p style="text-align: center;">  Performance Overview Open Positions: </p>
-
 
 ```{r include = TRUE, echo=FALSE}
-dp$position <-  replace(dp$position, is.na(dp$position),0)
-dp$position %>% subset((dp$position$SharePortfolio>0.001 &
-                          !is.na(dp$position$SharePortfolio)) | dp$position$Name == 'Portfolio:'| 
-                         dp$position$Category == 'Benchmark', 
-                       select=c("Category",'Name',
-                                'CloseDate','Value','Volume',
-                                'SharePortfolio',
-                                "1D.logReturn",
-                                "CAPM.Return",
-                                "1D.return",
-                                "5D.logReturn",
-                                "23D.logReturn",
-                                "125D.logReturn",
-                                "250D.logReturn")) %>% 
-  dplyr::rename('D1.LR'='1D.logReturn')%>%
-  dplyr::rename('CAPM.Return'='CAPM.Return')%>%
-  dplyr::rename('D1.R'='1D.return')%>%
-  dplyr::rename('D5.LR'='5D.logReturn')%>%
-  dplyr::rename('D23.LR'='23D.logReturn')%>%
-  dplyr::rename('D125.LR'='125D.logReturn')%>%
-  dplyr::rename('D250.LR'='250D.logReturn')%>%
-  dplyr::mutate(Value=round(`Value`,0))%>%
-  plyr::arrange(Category,!SharePortfolio) -> t2
-
-  t2 %>%
-    datatable(extensions = 'Buttons', options = list(pageLength = 100,
-    dom = 'Bfrtip',
-    buttons = list('copy', 'csv', 'excel', 'pdf', 'print',
-    list(extend = 'colvis',visible=F, targets= 0, columns = c(3:dim(t2)[2])))
-        )) %>%
-  formatCurrency('D1.R', '\U20AC', digits = 1) %>%
-  formatCurrency('Value', '\U20AC', digits = ) %>%
-  formatPercentage('D1.LR', 2) %>%
-  formatStyle('D1.LR', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
-  formatPercentage('CAPM.Return', 2) %>%
-  formatStyle('CAPM.Return', background = color_from_middle(t2$CAPM.Return,'pink','lightgreen'))%>%
-  formatPercentage('D5.LR', 2) %>%
-  formatStyle('D5.LR', background = color_from_middle(t2$D5.LR,'pink','lightgreen'))%>%
-  formatPercentage('D23.LR', 2) %>%
-  formatStyle('D23.LR', background = color_from_middle(t2$D23.LR,'pink','lightgreen'))%>%
-  formatPercentage('D125.LR', 2) %>%
-  formatStyle('D125.LR', background = color_from_middle(t2$D125.LR,'pink','lightgreen'))%>%
-  formatPercentage('D250.LR', 2) %>%
-  formatStyle('D250.LR', background = color_from_middle(t2$D250.LR,'pink','lightgreen'))%>%
+replace(dp$position, is.na(dp$position),0) %>% 
+  subset((dp$position$SharePortfolio>0.001 &
+            !is.na(dp$position$SharePortfolio)) | dp$position$Name == 'Portfolio:'| 
+           dp$position$Category == 'Benchmark' ,
+                       select=c('Category','Name','CloseDate',
+                                'SharePortfolio', 
+                                'Value',
+                                'beta','jensen_alpha',
+                                'ab_return_D1',
+                                "return_D1",
+                                'CAPM_return_D1',
+                                'ab_return_D5',
+                                "return_D5",
+                                'CAPM_return_D5',
+                                'ab_return_D23',
+                                "return_D23",
+                                'CAPM_return_D23',
+                                'ab_return_D125',
+                                "return_D125",
+                                'CAPM_return_D125',
+                                'ab_return_D250',
+                                "return_D250",
+                                "CAPM_return_D250"))%>% 
+  plyr::arrange(Category,!SharePortfolio)  %>%
+  datatable(extensions = 'Buttons', options = list(pageLength = 100,
+  dom = 'Bfrtip', buttons = list('copy', 'csv', 'excel', 'pdf', 'print',
+  list(extend = 'colvis',visible=F, targets= 0, columns = c(3:dim(t2)[2])))
+  ))%>%
+  formatCurrency('Value', '\U20AC', digits = 0) %>%
+  formatCurrency('beta', '', digits = 3) %>%
+  formatCurrency('jensen_alpha', '', digits = 2) %>%
   formatPercentage('SharePortfolio', 1) %>%
-  formatStyle('SharePortfolio', background = color_from_middle(t2$SharePortfolio,'lightblue','lightblue'))
+  formatStyle('SharePortfolio', background = color_from_middle(t2$SharePortfolio,'lightblue','lightblue')) %>%
+  
+  formatPercentage('return_D1', 2)%>%
+  formatStyle('return_D1', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatPercentage('CAPM_return_D1', 2)%>%
+  formatStyle('CAPM_return_D1', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D1', '\U20AC', digits = 0)  %>%
+  
+  formatPercentage('return_D5', 2)%>%
+  formatStyle('return_D5', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D5', '\U20AC', digits = 0)  %>%
+  formatPercentage('CAPM_return_D5', 2)%>%
+  formatStyle('CAPM_return_D5', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D5', '\U20AC', digits = 0)  %>%
+  
+  formatPercentage('return_D23', 2)%>%
+  formatStyle('return_D23', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D23', '\U20AC', digits = 0) %>%
+  formatPercentage('CAPM_return_D23', 2)%>%
+  formatStyle('CAPM_return_D23', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D23', '\U20AC', digits = 0)  %>%
+  
+  formatPercentage('return_D125', 2)%>%
+  formatStyle('return_D125', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D125', '\U20AC', digits = 0)   %>%
+  formatPercentage('CAPM_return_D125', 2)%>%
+  formatStyle('CAPM_return_D125', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D125', '\U20AC', digits = 0)  %>%
+  
+  formatPercentage('return_D250', 2)%>%
+  formatStyle('return_D250', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D250', '\U20AC', digits = 0) %>%
+  formatPercentage('CAPM_return_D250', 2)%>%
+  formatStyle('CAPM_return_D250', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D250', '\U20AC', digits = 0)  
 ```
 
+
+
+<p style="text-align: center;">  Performance aggregated by category: </p>
+```{r include = TRUE, echo=FALSE}
+replace(dp$position, is.na(dp$position),0) %>% 
+  subset((dp$position$SharePortfolio== 0 &
+            !is.na(dp$position$SharePortfolio)) | dp$position$Name == 'Portfolio:'| 
+           dp$position$Category == 'Benchmark' ,
+                       select=c('Category','Name','CloseDate',
+                                'SharePortfolio', 
+                                'Value',
+                                'beta','jensen_alpha',
+                                'ab_return_D1',
+                                "return_D1",
+                                'CAPM_return_D1',
+                                'ab_return_D5',
+                                "return_D5",
+                                'CAPM_return_D5',
+                                'ab_return_D23',
+                                "return_D23",
+                                'CAPM_return_D23',
+                                'ab_return_D125',
+                                "return_D125",
+                                'CAPM_return_D125',
+                                'ab_return_D250',
+                                "return_D250",
+                                "CAPM_return_D250"))%>% 
+  plyr::arrange(Category,!SharePortfolio)  %>%
+  datatable(extensions = 'Buttons', options = list(pageLength = 100,
+  dom = 'Bfrtip', buttons = list('copy', 'csv', 'excel', 'pdf', 'print',
+  list(extend = 'colvis',visible=F, targets= 0, columns = c(3:dim(t2)[2])))
+  ))%>%
+  formatCurrency('Value', '\U20AC', digits = 0) %>%
+  formatCurrency('beta', '', digits = 3) %>%
+  formatCurrency('jensen_alpha', '', digits = 2) %>%
+  formatPercentage('SharePortfolio', 1) %>%
+  formatStyle('SharePortfolio', background = color_from_middle(t2$SharePortfolio,'lightblue','lightblue')) %>%
+  
+  formatPercentage('return_D1', 2)%>%
+  formatStyle('return_D1', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatPercentage('CAPM_return_D1', 2)%>%
+  formatStyle('CAPM_return_D1', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D1', '\U20AC', digits = 0)  %>%
+  
+  formatPercentage('return_D5', 2)%>%
+  formatStyle('return_D5', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D5', '\U20AC', digits = 0)  %>%
+  formatPercentage('CAPM_return_D5', 2)%>%
+  formatStyle('CAPM_return_D5', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D5', '\U20AC', digits = 0)  %>%
+  
+  formatPercentage('return_D23', 2)%>%
+  formatStyle('return_D23', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D23', '\U20AC', digits = 0) %>%
+  formatPercentage('CAPM_return_D23', 2)%>%
+  formatStyle('CAPM_return_D23', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D23', '\U20AC', digits = 0)  %>%
+  
+  formatPercentage('return_D125', 2)%>%
+  formatStyle('return_D125', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D125', '\U20AC', digits = 0)   %>%
+  formatPercentage('CAPM_return_D125', 2)%>%
+  formatStyle('CAPM_return_D125', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D125', '\U20AC', digits = 0)  %>%
+  
+  formatPercentage('return_D250', 2)%>%
+  formatStyle('return_D250', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D250', '\U20AC', digits = 0) %>%
+  formatPercentage('CAPM_return_D250', 2)%>%
+  formatStyle('CAPM_return_D250', background = color_from_middle(t2$D1.LR,'pink','lightgreen'))%>%
+  formatCurrency('ab_return_D250', '\U20AC', digits = 0)  
+```
 
 </center>
