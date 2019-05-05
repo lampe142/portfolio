@@ -19,44 +19,58 @@ bootRisk <- function(logR, nBoot=100){
   individualES <- sapply(1:nBoot, function(x) bootResults$thetastar[[x]]$individualES)
     
   # save marginal VaR
-  dp$risk$`mVaR bootstrap`[hVaR.index] <<- rowMeans(mVaR, na.rm = FALSE, dims = 1)
-  dp$risk$`mVaR bootstrap 05Quantile`[hVaR.index] <<- 
+  dp$position$`mVaR_bootstrap` <- NA 
+  dp$position$`mVaR_bootstrap`[hVaR.index] <- rowMeans(mVaR, na.rm = FALSE, dims = 1)
+  dp$position$`mVaR_bootstrap_05Quantile` <- NA
+  dp$position$`mVaR_bootstrap_05Quantile`[hVaR.index] <- 
     apply(mVaR, 1, quantile, probs = c(0.05),  na.rm = TRUE)
-  dp$risk$`mVaR bootstrap 95Quantile`[hVaR.index] <<- 
+  dp$position$`mVaR_bootstrap_95Quantile` <- NA
+  dp$position$`mVaR_bootstrap_95Quantile`[hVaR.index] <- 
     apply(mVaR, 1, quantile, probs = c(0.95),  na.rm = TRUE)
   
   # save incremental VaR
-  dp$risk$`incVaR bootstrap`[hVaR.index] <<- rowMeans(incVaR, na.rm = FALSE, dims = 1)
-  dp$risk$`incVaR bootstrap 05Quantile`[hVaR.index] <<- 
+  dp$position$`incVaR bootstrap`<-NA
+  dp$position$`incVaR bootstrap`[hVaR.index] <- rowMeans(incVaR, na.rm = FALSE, dims = 1)
+  dp$position$`incVaR_bootstrap_05Quantile`<-NA
+  dp$position$`incVaR_bootstrap_05Quantile`[hVaR.index] <- 
     apply(incVaR, 1, quantile, probs = c(0.05),  na.rm = TRUE)
-  dp$risk$`incVaR bootstrap 95Quantile`[hVaR.index] <<- 
+  dp$position$`incVaR_bootstrap_95Quantile`<-NA
+  dp$position$`incVaR_bootstrap_95Quantile`[hVaR.index] <- 
     apply(incVaR, 1, quantile, probs = c(0.95),  na.rm = TRUE)
   
   #save individual VaR
-  dp$risk$VaR_bootstrap[hVaR.index] <<- rowMeans(individualVaR, na.rm = FALSE, dims = 1) 
-  dp$risk$`VaR bootstrap 05Quantile`[hVaR.index] <<- 
+  dp$position$VaR_bootstrap<-NA
+  dp$position$VaR_bootstrap[hVaR.index] <- rowMeans(individualVaR, na.rm = FALSE, dims = 1) 
+  dp$position$`VaR_bootstrap_05Quantile`<-NA
+  dp$position$`VaR_bootstrap_05Quantile`[hVaR.index] <- 
     apply(individualVaR, 1, quantile, probs = c(0.05),  na.rm = TRUE)
-  dp$risk$`VaR bootstrap 95Quantile`[hVaR.index] <<- 
+  dp$position$`VaR_bootstrap_95Quantile`<-NA
+  dp$position$`VaR_bootstrap_95Quantile`[hVaR.index] <- 
     apply(individualVaR, 1, quantile, probs = c(0.95),  na.rm = TRUE)
   
   #save portfolio VaR
-  dp$risk$VaR_bootstrap[port.index] <<- mean(VaR)
-  dp$risk$`VaR bootstrap 05Quantile`[port.index] <<- quantile(VaR, probs = 0.05,na.rm = T)
-  dp$risk$`VaR bootstrap 95Quantile`[port.index] <<- quantile(VaR, probs = 0.95,na.rm = T)
+  dp$position$VaR_bootstrap[port.index] <- mean(VaR)
+  dp$position$`VaR_bootstrap_05Quantile`[port.index] <- quantile(VaR, probs = 0.05,na.rm = T)
+  dp$position$`VaR_bootstrap_95Quantile`[port.index] <- quantile(VaR, probs = 0.95,na.rm = T)
   
   # save individual ES
-  dp$risk$`ES bootstrap`[hVaR.index] <<- rowMeans(individualES, na.rm = TRUE, dims = 1)
-  dp$risk$`ES bootstrap 05Quantile`[hVaR.index] <<- apply(individualES, 1, quantile, probs = c(0.05),  na.rm = TRUE)
-  dp$risk$`ES bootstrap 95Quantile`[hVaR.index] <<- apply(individualES, 1, quantile, probs = c(0.95),  na.rm = TRUE)
+  dp$position$`ES_bootstrap`<-NA
+  dp$position$`ES_bootstrap_05Quantile`<-NA
+  dp$position$`ES_bootstrap_95Quantile`<-NA
+  dp$position$`ES_bootstrap`[hVaR.index] <- rowMeans(individualES, na.rm = TRUE, dims = 1)
+  dp$position$`ES_bootstrap_05Quantile`[hVaR.index] <- apply(individualES, 1, quantile, probs = c(0.05),  na.rm = TRUE)
+  dp$position$`ES_bootstrap_95Quantile`[hVaR.index] <- apply(individualES, 1, quantile, probs = c(0.95),  na.rm = TRUE)
   # save portfolio ES
-  dp$risk$`ES bootstrap`[port.index] <<- mean(ES, na.rm = T)
-  dp$risk$`ES bootstrap 05Quantile`[port.index] <<- quantile(ES,probs = c(0.05),na.rm=T)
-  dp$risk$`ES bootstrap 95Quantile`[port.index] <<- quantile(ES,probs = c(0.95),na.rm=T)
-  dp$risk$`component VaR` <<- dp$risk$`mVaR bootstrap` * dp$risk$SharePortfolio *100
-  dp$risk$`VaR Share` <<- dp$risk$`mVaR bootstrap` * dp$risk$SharePortfolio / dp$risk$VaR_bootstrap[port.index]
-  # dp$risk$`VaR_bootstrap`[port.index]
-  # sum(dp$risk$`component VaR`,na.rm=T)
-  
+  dp$position$`ES_bootstrap`[port.index] <- mean(ES, na.rm = T)
+  dp$position$`ES_bootstrap_05Quantile`[port.index] <- quantile(ES,probs = c(0.05),na.rm=T)
+  dp$position$`ES_bootstrap_95Quantile`[port.index] <- quantile(ES,probs = c(0.95),na.rm=T)
+  dp$position$`component_VaR` <- NA
+  dp$position$`component_VaR` <- dp$position$`mVaR_bootstrap` * dp$position$SharePortfolio *100
+  dp$position$`VaR_Share`<-NA
+  dp$position$`VaR_Share` <- dp$position$`mVaR_bootstrap` * dp$position$SharePortfolio / dp$position$VaR_bootstrap[port.index]
+  # dp$position$`VaR_bootstrap`[port.index]
+  # sum(dp$position$`component VaR`,na.rm=T)
+  dp <<- dp
   return()
 }
 

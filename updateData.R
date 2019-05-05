@@ -1,7 +1,7 @@
 ################################################################################
 # import data Test
 ################################################################################
-# tail(getHisDataAV(symbolI='EEM', verbose=F, os='compact'),1)
+# tail(getHisDataAV(symbolI='RKUNF', verbose=F, os='compact'),1)
 # ailhVaR <- PerformanceAnalytics::VaR(R=dm$ret , method="gaussian",p=.95)
 
 ################################################################################
@@ -16,13 +16,11 @@ print(paste('########### 1. Set working directory',getwd(), Sys.time()))
 source('profileRep.R')
 
 print(paste('########### 2. Read Input'))
-fileName = 'PositionInfo/full_Port.xlsx'
+# fileName = 'PositionInfo/full_Port.xlsx'
 dp <<- list()
 dm <<- list()
-dp$position <- readxl::read_excel(path=fileName, sheet='Position')[-21,]
-dp$risk <- readxl::read_excel(path=fileName, sheet='Risk')[-21,]
-row.names(dp$risk) <- dp$risk$AlphaVantage
-row.names(dp$position) <- dp$risk$AlphaVantage
+dp$position <- readxl::read_excel(path='PositionInfo/full_Port_v2.xlsx')
+row.names(dp$position) <- dp$position$AlphaVantage
 
 # delete old files
 # file.remove('Dashboard/portfolio_performance.html')
@@ -44,10 +42,10 @@ mergeCloseRet()
 print(paste('Latest merged return:',index(tail(dm$logRet,1))))
 
 # Analysis
-filterMSGARCHLogRet(verbose = F)
+filterMSGARCHLogRet(verbose = T)
 updateRisk(dm$logRet, rf=dp$FX$rf1y)
 getRisk(logR = dm$logRet)
-bootRisk(logR = dm$logRet, nBoot = 1000)
+bootRisk(logR = dm$logRet, nBoot = 100)
 
 # tail(dm$logRet$EEM)
 print(paste('########### 5. Save output'))
@@ -56,9 +54,6 @@ save.image(paste0(here::here(),"/Data/Portfolio_Market.RData"))
 ## upload backup to dropbox
 print(paste('########### 5.1 Save output to dropbox'))
 save.image(paste0(here::here(),"/Backup/",Sys.Date()," Portfolio_Market.RData"))
-# rdrop2::drop_upload(paste0(here::here(),"/Backup/",Sys.Date()," Portfolio_Market.RData"), 
-#                    path = "PortfolioData",file = "token.rds")
-# file.remove(paste0(here::here(),"/Backup/",Sys.Date()," Portfolio_Market.RData"))
 
 savePortRisk(verbose = F)
 load(paste0(here::here(),"/Data/portRisk.RData"))

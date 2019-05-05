@@ -1,7 +1,7 @@
 getAllCurrentAV <- function(pauseTime=20){
-  dp$position[,"curr.1D.logReturn"] <- NA
+  dp$position[,"curr_return_D1"] <- NA
   repeat{
-    missingAss <-  dp$position$AlphaVantage[is.na(dp$position[,"curr.1D.logReturn"])]
+    missingAss <-  dp$position$AlphaVantage[is.na(dp$position[,"curr_return_D1"])]
     print(paste('Assets missing:',missingAss))
     
     cat(crayon::red(paste('Number of Assets missing:',length(missingAss))))
@@ -10,11 +10,11 @@ getAllCurrentAV <- function(pauseTime=20){
     for(iAss in missingAss){
       tryCatch({
         iAssCurr <- getCurrentAV(iAss,verbose = T)
-        dp$position[iAss,"curr.1D.logReturn"] <<- log(iAssCurr$close / tail(dp$FX$USEURO,1) / as.numeric(dp$position[iAss,"ClosePrice"]))
+        dp$position[iAss,"curr_return_D1"] <<- log(iAssCurr$close / tail(dp$FX$USEURO,1) / as.numeric(dp$position[iAss,"ClosePrice"]))
         # dp$dp$position[iAss,"curr.Date"] <- iAssCurr$date[[1]]
       }, error = function(e){
         Sys.sleep(pauseTime)
-        dp$position[iAss,"curr.1D.logReturn"] <<- NA
+        dp$position[iAss,"curr_return_D1"] <<- NA
       })
     }
     if(rlang::is_empty(missingAss)) break()
@@ -70,21 +70,24 @@ getAllData <- function(pauseTime=20, FXsource='ECB'){
   dp1$avAdjClose <- getPortData(pauseTime=20, itCycle=10, test=F, 
     downAssets =dp$position$AlphaVantage[-length(dp$position$AlphaVantage)])
   
+  iDownload <- 0
   # download 2. try
   repeat{
     missingAss = dp$position$AlphaVantage[
       dp$position$AlphaVantage[-length(dp$position$AlphaVantage)]
       %!in% attributes(dp1$avAdjClose)$names]
-    print(paste('Assets missing:',missingAss))
+    print(paste('Assets missing:',paste(missingAss, collapse = ' ')))
     
     cat(crayon::red(paste('Number of Assets missing:',length(missingAss))))
     cat(crayon::red(paste(' representing :',round(length(missingAss) / 
       length(dp$position$AlphaVantage),2) *100 ,'%')))
+    cat(crayon::bgMagenta(paste('Number Downloads runs:',iDownload)))
+    iDownload <- iDownload + 1
     
     dp2$avAdjClose <- getPortData(pauseTime=25, itCycle=10, test=F, downAssets = missingAss)
     # merging both downloads
     dp1$avAdjClose <- append(dp1$avAdjClose, dp2$avAdjClose)
-    if(rlang::is_empty(missingAss)) break()
+    if(rlang::is_empty(missingAss) & (iDownload < 100)) break()
   }
   dp$vola <<- getVola()
   dp$avAdjClose <<- dp1$avAdjClose
@@ -180,53 +183,67 @@ for (iAss in na.omit(downAssets)){
 ################################################################################
 # export
 updatePositionRisk <- function(){
+  dp$position$return_D1 <- NA
+  dp$position$return_D5 <- NA  
+  dp$position$return_D23 <- NA
+  dp$position$return_D125 <- NA
+  dp$position$return_D250 <- NA
+  dp$position$ab_return_D1 <- NA
+  dp$position$ab_return_D5 <- NA
+  dp$position$ab_return_D23 <- NA
+  dp$position$ab_return_D125 <- NA
+  dp$position$ab_return_D250 <- NA
+  
   for(iAss in names(dp$avAdjClose)){
     iAssPos <- which(dp$position$AlphaVantage == iAss)
     avAdjCloseEA <- eval(parse(text= paste("dp$avAdjClose$",iAss, sep=''))) / dp$FX$USEURO
-    dp$position$CloseDate[iAssPos] <<- time(tail(avAdjCloseEA))
-    dp$risk$CloseDate[iAssPos] <<- time(tail(avAdjCloseEA))
-    dp$position$ClosePrice[iAssPos] <<- tail(avAdjCloseEA, n=1)
-    avAdjlogRetEA <<- diff(log(avAdjCloseEA), lag=1)[-1]
-    dp$position$'CloseDate'[iAssPos] <<- unlist(strsplit(as.character(end(avAdjCloseEA))," "))
-    lDate <<- index(tail(avAdjCloseEA, n=1))
+    dp$position$CloseDate[iAssPos] <- as.Date(time(tail(avAdjCloseEA,1)))
+    dp$position$ClosePrice[iAssPos] <- tail(avAdjCloseEA, n=1)
+    avAdjlogRetEA <- diff(log(avAdjCloseEA), lag=1)[-1]
+    lDate <- index(tail(avAdjCloseEA, n=1))
   
-    dp$position$'1D.logReturn'[iAssPos] <<- as.numeric(tail(avAdjCloseEA[paste((lDate-1),lDate,sep='/')],1))/
+    dp$position$'return_D1'[iAssPos] <- as.numeric(tail(avAdjCloseEA[paste((lDate-1),lDate,sep='/')],1))/
       as.numeric(head(avAdjCloseEA[paste((lDate-1),lDate,sep='/')],1)) -1
     
-    dp$position$'5D.logReturn'[iAssPos] <<- as.numeric(tail(avAdjCloseEA[paste((lDate-5),lDate,sep='/')],1))/
+    dp$position$'return_D5'[iAssPos] <- as.numeric(tail(avAdjCloseEA[paste((lDate-5),lDate,sep='/')],1))/
       as.numeric(head(avAdjCloseEA[paste((lDate-5),lDate,sep='/')],1)) -1
     
-    dp$position$'23D.logReturn'[iAssPos] <<-
+    dp$position$'return_D23'[iAssPos] <-
     as.numeric(tail(avAdjCloseEA[paste((lDate-30),lDate,sep='/')],1))/
       as.numeric(head(avAdjCloseEA[paste((lDate-30),lDate,sep='/')],1)) -1
     
-    dp$position$'125D.logReturn'[iAssPos] <<- 
+    dp$position$'return_D125'[iAssPos] <- 
       as.numeric(tail(avAdjCloseEA[paste((lDate-365/2),lDate,sep='/')],1))/
       as.numeric(head(avAdjCloseEA[paste((lDate-365/2),lDate,sep='/')],1)) -1
     
-    dp$position$'250D.logReturn'[iAssPos] <<- 
+    dp$position$'return_D250'[iAssPos] <- 
       as.numeric(tail(avAdjCloseEA[paste((lDate-365),lDate,sep='/')],1))/
       as.numeric(head(avAdjCloseEA[paste((lDate-365),lDate,sep='/')],1)) -1
   }
-  dp$position$Value <<- dp$position$Volume * dp$position$ClosePrice
-  dp$risk$Value <<- dp$position$Value
-  dp$position$'1D.return' <<- dp$position$'1D.logReturn' * dp$position$Value / (1 + dp$position$`1D.logReturn`)
-  dp$position$SharePortfolio <<- dp$position$Value / sum(dp$position$Value, na.rm =T)
-  dp$risk$SharePortfolio <<- dp$position$SharePortfolio
+  dp$position$Value <- dp$position$Volume * dp$position$ClosePrice
+  dp$position$ab_return_D1 <- dp$position$return_D1 * dp$position$Value / (1 + dp$position$return_D1)
+  dp$position$ab_return_D5 <- dp$position$return_D5 * dp$position$Value / (1 + dp$position$return_D5)
+  dp$position$ab_return_D23 <- dp$position$return_D23 * dp$position$Value / (1 + dp$position$return_D5)
+  dp$position$ab_return_D125 <- dp$position$return_D125 * dp$position$Value / (1 + dp$position$return_D5)
+  dp$position$ab_return_D250 <- dp$position$return_D250 * dp$position$Value / (1 + dp$position$return_D5)
+  
+  
+  dp$position$SharePortfolio <- dp$position$Value / sum(dp$position$Value, na.rm =T)
   
   posPort <- which(dp$position$Name=="Portfolio:")
-  dp$position$Value[posPort] <<- sum(dp$position$Value[1:(posPort-1)], na.rm = T)
-  dp$risk$Value[posPort] <<- sum(dp$position$Value[1:(posPort-1)], na.rm = T)
-  dp$position$CloseDate[posPort] <<- max(dp$position$CloseDate[-posPort])
-  dp$risk$CloseDate <<- dp$position$CloseDate
+  dp$position$Value[posPort] <- sum(dp$position$Value[1:(posPort-1)], na.rm = T)
+  dp$position$CloseDate[posPort] <- max(dp$position$CloseDate[-posPort])
   
-  dp$position$'1D.logReturn'[posPort] <<- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'1D.logReturn'[!is.na(dp$position$SharePortfolio)])
-  dp$position$'5D.logReturn'[posPort] <<- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'5D.logReturn'[!is.na(dp$position$SharePortfolio)])
-  dp$position$'23D.logReturn'[posPort] <<- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'23D.logReturn'[!is.na(dp$position$SharePortfolio)])
-  dp$position$'125D.logReturn'[posPort] <<- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'125D.logReturn'[!is.na(dp$position$SharePortfolio)])
-  dp$position$'250D.logReturn'[posPort] <<- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'250D.logReturn'[!is.na(dp$position$SharePortfolio)])
-  dp$position$Category[posPort] <<-'Portfolio:'
+  dp$position$'return_D1'[posPort] <- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'return_D1'[!is.na(dp$position$SharePortfolio)])
+  dp$position$'return_D5'[posPort] <- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'return_D5'[!is.na(dp$position$SharePortfolio)])
+  dp$position$'return_D23'[posPort] <- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'return_D23'[!is.na(dp$position$SharePortfolio)])
+  dp$position$'return_D125'[posPort] <- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'return_D125'[!is.na(dp$position$SharePortfolio)])
+  dp$position$'return_D250'[posPort] <- sum(dp$position$SharePortfolio[!is.na(dp$position$SharePortfolio)] * dp$position$'return_D250'[!is.na(dp$position$SharePortfolio)])
+  dp$position$'ab_return_D1'[posPort] <- sum(dp$position$'ab_return_D1'[-posPort], na.rm = T)
+  dp$position$Category[posPort] <-'Portfolio:'
+  dp$position$CloseDate <- as.Date(dp$position$CloseDate)
   
+  dp <<- dp
   return()
 }
 
@@ -239,6 +256,8 @@ mergeCloseRet <- function(fx = dp$FX$USEURO, avAdjClose=dp$avAdjClose,
   if(is.null(thres))thres <- list(dataMinLength=400, nLastDays=5, nLastDaysWind=10)
   #check that of the last days is available
   sel <- logical(length(attributes(avAdjClose)$names))
+  
+  dp$position$AlphaVantage %in% attributes(avAdjClose)$names
   # check sufficient data is available
   for (iAss in 1:length(attributes(avAdjClose)$names)){
     sel[iAss] <- length(avAdjClose[[iAss]]) > thres$dataMinLength &
@@ -265,16 +284,19 @@ mergeCloseRet <- function(fx = dp$FX$USEURO, avAdjClose=dp$avAdjClose,
   logReMer <- diff(log(avAdjCloseMerFX), lag=1)[-1]
   reMer <- diff(avAdjCloseMerFX, lag=1)[-1]
   # saving in the main list
-  dm$adjClose <<- avAdjCloseMerFX
-  dm$ret <<- reMer
-  dm$logRet <<- logReMer
-  dm$assTicker <<- colnames(logReMer)
-  dm$assDate <<- zoo::index(logReMer)
+  dm$adjClose <- avAdjCloseMerFX
+  dm$ret <- reMer
+  dm$logRet <- logReMer
+  dm$assTicker <- colnames(logReMer)
+  dm$assDate <- zoo::index(logReMer)
   
   dp$position$SharePortfolio <- replace(dp$position$SharePortfolio, is.na(dp$position$SharePortfolio),0)
-  dm$adjClosePort <<- xts(dm$adjClose %*%  dp$position$SharePortfolio[c(sel,F)], index(dm$adjClose[,1]))
-  dm$logRetPort <<- diff(log(dm$adjClosePort ), lag=1)[-1]
+  names(dm$adjClose)
+  dp$position$SharePortfolio[names(dm$adjClose)]
+  dm$adjClosePort <- xts(dm$adjClose %*%  dp$position$SharePortfolio[c(sel,F)], index(dm$adjClose[,1]))
+  dm$logRetPort <- diff(log(dm$adjClosePort ), lag=1)[-1]
   
+  dm <<- dm
   return()
 }
 
