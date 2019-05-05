@@ -23,6 +23,9 @@ require(reshape)
 require(tidyverse)
 require(missForest)
 require(maps)
+require(PortfolioAnalytics)
+require(magrittr)
+
 
 ################################################################################
 # source code
