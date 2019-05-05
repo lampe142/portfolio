@@ -1,0 +1,128 @@
+Date,Name,Type,Quantity,Price,Price Currency,Fees,Fees Currency,Shares,Amount,Amount Currency,Asset Class
+2016-11-09,iShares MDAX® UCITS ETF (DE),Long buy,30.00,175.80,EUR,10.00,EUR,,,,ETFs
+2016-11-24,SPDR Russell 3000 US Total Market UCITS ETF,Long buy,150.00,33.50,EUR,10.00,EUR,,,,ETFs
+2017-01-11,Netflix Inc,Long buy,10.00,122.77,EUR,10.00,EUR,,,,Equities
+2017-02-07,Manganese X Energy Corp,Long buy,"3,246.00",0.21,CAD,10.00,CAD,,,,Equities
+2017-02-20,ComStage SDAX® UCITS ETF,Long buy,41.00,96.53,EUR,10.00,EUR,,,,ETFs
+2017-02-22,Apple Inc,Long buy,2.00,136.87,USD,--,USD,,,,Equities
+2017-02-22,iShares € High Yield Corp Bond UCITS ETF EUR (Dist),Long buy,27.00,107.85,EUR,10.00,EUR,,,,ETFs
+2017-02-28,Canopy Growth Corp,Long buy,114.00,8.98,EUR,10.00,EUR,,,,Equities
+2017-03-16,iShares € High Yield Corp Bond UCITS ETF EUR (Dist),Dividend,,,,--,,27.00,1.99,EUR,ETFs
+2017-04-07,CannaRoyalty Corp,Long buy,244.00,2.07,EUR,10.00,EUR,,,,Equities
+2017-04-10,iShares MDAX® UCITS ETF (DE),Long sell,15.00,211.03,EUR,10.00,EUR,,,,ETFs
+2017-04-21,Amundi Index Solutions - Amundi CAC 40 UCITS ETF-C,Long buy,110.00,67.04,EUR,10.00,EUR,,,,ETFs
+2017-04-27,SPDR Russell 3000 US Total Market UCITS ETF,Long sell,150.00,34.93,EUR,10.00,EUR,,,,ETFs
+2017-05-02,iShares MDAX® UCITS ETF (DE),Dividend,,,,--,,15.00,1.12,EUR,ETFs
+2017-05-05,Amundi ETF MSCI Spain UCITS ETF,Long buy,14.00,215.12,EUR,10.00,EUR,,,,ETFs
+2017-05-05,iShares MSCI France UCITS ETF EUR (Acc),Long buy,91.00,33.21,EUR,10.00,EUR,,,,ETFs
+2017-05-11,Apple Inc,Dividend,,,,--,,2.00,0.63,USD,Equities
+2017-05-16,Snap Inc,Long buy,53.00,18.92,EUR,10.00,EUR,,,,Equities
+2017-06-12,Apple Inc,Long buy,8.00,149.47,USD,--,USD,,,,Equities
+2017-07-13,iShares MDAX® UCITS ETF (DE),Long buy,10.00,216.77,EUR,10.00,EUR,,,,ETFs
+2017-07-18,Netflix Inc,Long sell,10.00,159.63,EUR,10.00,EUR,,,,Equities
+2017-08-10,Apple Inc,Dividend,,,,--,,10.00,0.63,USD,Equities
+2017-08-15,Xtrackers MSCI Indonesia Swap UCITS ETF 1C,Long buy,227.00,13.30,EUR,--,EUR,,,,ETFs
+2017-08-15,Global X Lithium & Battery Tech ETF,Long buy,108.00,32.12,USD,10.00,USD,,,,ETFs
+2017-08-15,Global X MSCI Argentina ETF,Long buy,115.00,30.36,USD,--,USD,,,,ETFs
+2017-08-28,Global X Lithium & Battery Tech ETF,Long buy,104.00,33.68,USD,10.00,USD,,,,ETFs
+2017-08-28,ComStage SDAX® UCITS ETF,Dividend,,,,--,,41.00,1.72,EUR,ETFs
+2017-09-05,Amundi ETF MSCI Spain UCITS ETF,Long sell,14.00,201.80,EUR,10.00,EUR,,,,ETFs
+2017-09-14,iShares € High Yield Corp Bond UCITS ETF EUR (Dist),Dividend,,,,--,,27.00,2.06,EUR,ETFs
+2017-09-21,Amundi Index Solutions - Amundi CAC 40 UCITS ETF-C,Long sell,55.00,72.60,EUR,10.00,EUR,,,,ETFs
+2017-09-21,Newstrike Brands Ltd,Long buy,"2,136.00",0.3733,CAD,--,CAD,,,,Equities
+2017-10-07,L&G ROBO Global Robotics and Automation UCITS ETF,Long buy,205.00,13.30,EUR,11.26,EUR,,,,ETFs
+2017-10-19,Global X Robotics & Artificial Intelligence ETF,Long buy,150.00,24.28,USD,--,USD,,,,ETFs
+2017-11-10,Apple Inc,Dividend,,,,--,,10.00,0.63,USD,Equities
+2017-11-24,iShares € High Yield Corp Bond UCITS ETF EUR (Dist),Long sell,27.00,107.37,EUR,--,EUR,,,,ETFs
+2017-11-24,Spectra7 Microsystems Inc,Long buy,"3,140.00",0.238,EUR,--,EUR,,,,Equities
+2017-11-28,Parrot SA,Long buy,58.00,8.72,EUR,10.00,EUR,,,,Equities
+2017-11-28,AeroVironment Inc,Long buy,13.00,37.96,EUR,10.00,EUR,,,,Equities
+2017-11-28,iShares MSCI France UCITS ETF EUR (Acc),Long sell,91.00,33.61,EUR,10.00,EUR,,,,ETFs
+2017-12-21,Canopy Growth Corp,Long buy,53.00,14.44,EUR,10.00,EUR,,,,Equities
+2017-12-27,ComStage SDAX® UCITS ETF,Dividend,,,,--,,41.00,0.3875,EUR,ETFs
+2017-12-28,Global X Lithium & Battery Tech ETF,Dividend,,,,--,,212.00,1.26,USD,ETFs
+2017-12-28,Global X MSCI Argentina ETF,Dividend,,,,--,,115.00,0.1744,USD,ETFs
+2017-12-28,Global X Robotics & Artificial Intelligence ETF,Dividend,,,,--,,150.00,0.0004,USD,ETFs
+2017-12-28,Global X Robotics & Artificial Intelligence ETF,Dividend,,,,--,,150.00,0.0019,USD,ETFs
+2018-01-02,iShares MDAX® UCITS ETF (DE),Dividend,,,,--,,25.00,0.754,EUR,ETFs
+2018-01-09,Newstrike Brands Ltd,Long sell,507.00,2.87,CAD,15.00,CAD,,,,Equities
+2018-01-12,Snap Inc,Long sell,53.00,11.76,EUR,10.00,EUR,,,,Equities
+2018-02-07,Aurora Cannabis Inc,Long buy,65.00,7.69,EUR,--,EUR,,,,Equities
+2018-02-09,Apple Inc,Dividend,,,,--,,10.00,0.63,USD,Equities
+2018-02-13,iShares MSCI Japan EUR Hedged UCITS ETF (Acc),Long buy,40.00,49.12,EUR,--,EUR,,,,ETFs
+2018-02-16,iShares MSCI Korea UCITS ETF USD (Dist),Long buy,48.00,41.40,EUR,--,EUR,,,,ETFs
+2018-02-23,Magforce AG,Long buy,104.00,7.21,EUR,--,EUR,,,,Equities
+2018-03-07,Heliospectra AB (publ),Long buy,"1,070.00",0.72,EUR,--,EUR,,,,Equities
+2018-03-15,iShares MSCI Korea UCITS ETF USD (Dist),Dividend,,,,--,,48.00,0.3284,EUR,ETFs
+2018-04-06,Geely Automobile Holdings Ltd,Long buy,260.00,2.34,EUR,10.00,EUR,,,,Equities
+2018-04-12,BYD Co Ltd,Long buy,155.00,6.46,EUR,10.00,EUR,,,,Equities
+2018-04-17,Global X Next Emerging & Frontier ETF,Long buy,150.00,24.85,USD,--,USD,,,,ETFs
+2018-04-17,BlueStar Israel Technology ETF,Long buy,112.00,33.66,USD,--,USD,,,,ETFs
+2018-04-23,iShares MSCI All Peru ETF,Long buy,82.00,44.63,USD,--,USD,,,,ETFs
+2018-04-23,Canopy Growth Corp,Long sell,113.00,19.21,EUR,10.00,EUR,,,,Equities
+2018-05-11,Apple Inc,Dividend,,,,--,,10.00,0.73,USD,Equities
+2018-05-11,CannaRoyalty Corp,Long buy,276.00,3.20,EUR,--,EUR,,,,Equities
+2018-05-18,CannaRoyalty Corp,Long buy,"1,150.00",3.53,EUR,--,EUR,,,,Equities
+2018-06-03,Global X Lithium & Battery Tech ETF,Long sell,150.00,24.36,USD,--,USD,,,,ETFs
+2018-06-05,iShares MSCI Spain Capped ETF,Long buy,105.00,31.59,USD,--,USD,,,,ETFs
+2018-06-05,BlueStar Israel Technology ETF,Long buy,102.00,25.79,USD,--,USD,,,,ETFs
+2018-06-08,Geely Automobile Holdings Ltd,Dividend,,,,--,,260.00,0.0314,EUR,Equities
+2018-06-19,iShares MSCI Spain Capped ETF,Dividend,,,,--,,105.00,0.4695,USD,ETFs
+2018-06-19,iShares MSCI All Peru ETF,Dividend,,,,--,,82.00,0.3845,USD,ETFs
+2018-06-20,ComStage SDAX® UCITS ETF,Long sell,41.00,114.70,EUR,--,EUR,,,,ETFs
+2018-06-22,BYD Co Ltd,Dividend,,,,--,,155.00,0.0187,EUR,Equities
+2018-06-23,Heliospectra AB (publ),Long buy,"1,200.00",0.828,EUR,--,EUR,,,,Equities
+2018-07-17,Xtrackers MSCI Indonesia Swap UCITS ETF 1C,Long sell,227.00,11.55,EUR,--,EUR,,,,ETFs
+2018-07-24,iShares MDAX® UCITS ETF (DE),Long sell,25.00,229.35,EUR,--,EUR,,,,ETFs
+2018-07-26,iShares MSCI France ETF,Long buy,165.00,31.44,USD,--,USD,,,,ETFs
+2018-07-27,Amundi Index Solutions - Amundi CAC 40 UCITS ETF-C,Long sell,55.00,77.55,EUR,--,EUR,,,,ETFs
+2018-07-30,L&G ROBO Global Robotics and Automation UCITS ETF,Long sell,205.00,13.85,EUR,--,EUR,,,,ETFs
+2018-08-10,Apple Inc,Dividend,,,,--,,10.00,0.73,USD,Equities
+2018-08-24,Amphenol Corp,Long buy,13.00,81.57,EUR,--,EUR,,,,Equities
+2018-08-24,Alibaba Group Holding Ltd,Long buy,7.00,178.76,USD,--,USD,,,,Equities
+2018-08-28,Tencent Holdings Ltd,Long buy,38.00,39.67,EUR,--,EUR,,,,Equities
+2018-08-28,JD.com Inc,Long buy,37.00,28.40,EUR,--,EUR,,,,Equities
+2018-08-31,GW Pharmaceuticals PLC,Long buy,19.00,121.74,EUR,--,EUR,,,,Equities
+2018-08-31,Aurora Cannabis Inc,Long buy,173.00,5.82,EUR,--,EUR,,,,Equities
+2018-09-03,iAnthus Capital Holdings Inc,Long buy,410.00,4.90,EUR,--,EUR,,,,Equities
+2018-09-05,Global X Next Emerging & Frontier ETF,Long sell,150.00,20.16,USD,--,USD,,,,ETFs
+2018-09-05,CannTrust Holdings Inc,Long buy,270.00,7.29,EUR,--,EUR,,,,Equities
+2018-09-06,iShares MSCI All Peru ETF,Long sell,82.00,35.51,USD,--,USD,,,,ETFs
+2018-09-06,iShares MSCI Japan EUR Hedged UCITS ETF (Acc),Long sell,40.00,48.84,EUR,--,EUR,,,,ETFs
+2018-09-06,Global X MSCI Argentina ETF,Long sell,115.00,21.14,USD,--,USD,,,,ETFs
+2018-09-07,iAnthus Capital Holdings Inc,Long buy,400.00,5.15,EUR,--,EUR,,,,Equities
+2018-09-10,Newstrike Brands Ltd,Long sell,"1,629.00",0.444,CAD,--,CAD,,,,Equities
+2018-09-11,Namaste Technologies Inc,Long buy,750.00,2.47,USD,--,USD,,,,Equities
+2018-09-13,iShares MSCI Korea UCITS ETF USD (Dist),Dividend,,,,--,,48.00,0.0489,EUR,ETFs
+2018-09-14,Amphenol Corp,Dividend,,,,--,,13.00,0.1978,EUR,Equities
+2018-09-14,iAnthus Capital Holdings Inc,Long buy,320.00,4.68,EUR,--,EUR,,,,Equities
+2018-09-18,Namaste Technologies Inc,Long buy,700.00,2.36,USD,--,USD,,,,Equities
+2018-09-20,Alcanna Inc,Long buy,400.00,9.50,CAD,--,CAD,,,,Equities
+2018-09-27,Alcanna Inc,Dividend,,,,--,,400.00,0.09,CAD,Equities
+2018-10-01,Namaste Technologies Inc,Long buy,340.00,2.04,USD,--,USD,,,,Equities
+2018-10-18,Shopify Inc,Long buy,17.00,119.39,EUR,--,EUR,,,,Equities
+2018-11-05,Global X Lithium & Battery Tech ETF,Long sell,62.00,31.37,USD,--,USD,,,,ETFs
+2018-11-06,KushCo Holdings Inc,Long buy,240.00,6.24,USD,--,USD,,,,Equities
+2018-11-08,Apple Inc,Dividend,,,,--,,10.00,0.73,USD,Equities
+2018-11-21,Medmen Enterprises Inc,Long buy,230.00,3.19,EUR,--,EUR,,,,Equities
+2018-12-14,Amphenol Corp,Dividend,,,,--,,13.00,0.2034,EUR,Equities
+2018-12-18,iShares MSCI Spain Capped ETF,Dividend,,,,--,,105.00,0.5196,USD,ETFs
+2018-12-18,iShares MSCI France ETF,Dividend,,,,--,,165.00,0.1226,USD,ETFs
+2018-12-24,BlueStar Israel Technology ETF,Dividend,,,,--,,214.00,0.0919,USD,ETFs
+2018-12-28,Global X Robotics & Artificial Intelligence ETF,Dividend,,,,--,,150.00,0.2415,USD,ETFs
+2019-01-09,Aurora Cannabis Inc,Long buy,350.00,4.42,EUR,--,EUR,,,,Equities
+2019-01-16,Aurora Cannabis Inc,Long buy,230.00,6.30,EUR,--,EUR,,,,Equities
+2019-01-21,Aurora Cannabis Inc,Long buy,165.00,5.70,EUR,--,EUR,,,,Equities
+2019-02-08,Apple Inc,Dividend,,,,--,,10.00,0.73,USD,Equities
+2019-02-12,BlueStar Israel Technology ETF,Long sell,65.00,34.68,USD,--,USD,,,,ETFs
+2019-02-14,CannaRoyalty Corp,Long sell,324.00,6.11,EUR,--,EUR,,,,Equities
+2019-02-19,Medipharm Labs Corp,Long buy,450.00,2.99,CAD,--,CAD,,,,Equities
+2019-03-14,iShares MSCI Korea UCITS ETF USD (Dist),Dividend,,,,--,,48.00,0.4358,EUR,ETFs
+2019-03-18,Amphenol Corp,Dividend,,,,--,,13.00,0.2028,EUR,Equities
+2019-03-25,Aurora Cannabis Inc,Long sell,130.00,7.83,EUR,--,EUR,,,,Equities
+2019-03-25,CannaRoyalty Corp,Long sell,140.00,6.94,EUR,--,EUR,,,,Equities
+2019-03-25,iAnthus Capital Holdings Inc,Long sell,190.00,5.16,EUR,--,EUR,,,,Equities
+2019-03-26,Auscann Group Holdings Ltd,Long buy,"6,000.00",0.270,EUR,--,EUR,,,,Equities
+2019-04-16,Medipharm Labs Corp,Long buy,270.00,5.77,CAD,--,CAD,,,,Equities
+2019-05-02,Medmen Enterprises Inc,Long buy,500.00,3.55,EUR,--,EUR,,,,Equities
+2019-05-03,Aurora Cannabis Inc,Long sell,310.00,7.87,EUR,--,EUR,,,,Equities
