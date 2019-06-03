@@ -87,7 +87,7 @@ getAllData <- function(pauseTime=20, FXsource='ECB'){
     dp2$avAdjClose <- getPortData(pauseTime=25, itCycle=10, test=F, downAssets = missingAss)
     # merging both downloads
     dp1$avAdjClose <- append(dp1$avAdjClose, dp2$avAdjClose)
-    if(rlang::is_empty(missingAss) & (iDownload < 100)) break()
+    if(rlang::is_empty(missingAss) | (iDownload > 50)) break()
   }
   dp$vola <<- getVola()
   dp$avAdjClose <<- dp1$avAdjClose
