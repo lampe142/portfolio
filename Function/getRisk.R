@@ -215,8 +215,8 @@ mVaR <- function(logR, hVaR.weight, position, hVaR.index){
 # portRisk <- cbind(portRisk, data.frame(VolaN1_MSGARCH=matrix(data = rep(NA,nrow(portRisk)))))
 savePortRisk <- function(verbose = F){
   load(paste0(here::here(),"/Data/portRisk.RData"))
-  portRisk <- rbind(portRisk, dp$position["portfolio",c("CloseDate","beta_1Y","beta","jensen_alpha","CAPM_return_D250","std_log_return_1Y","VaR bootstrap 05Quantile","VaR_bootstrap","VaR bootstrap 95Quantile",
-                                                 "VolaN1_MSGARCH","MSGARCH_prob","ES_MSGARCH", "ES bootstrap 05Quantile","ES bootstrap" ,"ES bootstrap 95Quantile")])
+  portRisk <- rbind(portRisk, dp$position["portfolio",c("CloseDate","beta_1Y","beta","jensen_alpha","CAPM_return_D250","std_log_return_1Y","VaR_bootstrap_05Quantile","VaR_bootstrap","VaR_bootstrap_95Quantile",
+                                                 "VolaN1_MSGARCH","MSGARCH_prob","ES_MSGARCH", "ES_bootstrap_05Quantile","ES_bootstrap" ,"ES_bootstrap_95Quantile")])
   if(verbose) View(portRisk)
   save(file=paste0(here::here(),"/Data/portRisk.RData"), portRisk)
 }
